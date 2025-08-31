@@ -1,4 +1,5 @@
 import { PiSealQuestionBold  as HiddenIcon} from "react-icons/pi"
+
 function Ficha({pairId, name, Icon, color, status}){
     const alphaColor = color.replace('1)', '0.5)')
 
