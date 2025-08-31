@@ -7,7 +7,7 @@ function Ficha({ myKey, pairId, name, Icon, color, status, handleClick }){
         <div 
         onClick={() => handleClick(myKey)}
         className="ficha" 
-        style={!status ? { borderColor: 'gray', backgroundColor: 'lightgray' } : { borderColor: alphaColor, backgroundColor: 'var(--lightGray)'}}
+        style={!status ? { borderColor: 'gray', backgroundColor: 'lightgray', cursor: 'pointer', filter: 'drop-shadow(0px 0px 1px var(--dark))' } : { borderColor: alphaColor, backgroundColor: 'var(--lightGray)'}}
         >
             {
             !status

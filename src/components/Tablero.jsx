@@ -12,6 +12,7 @@ function Tablero({ cantParesAJugar }) {
     const handleClickFicha = key => {
         setFichasTocadas(prev => {  
             const fichaActual = fichas.find(f => f.myKey === key)
+            if(prev[0]?.myKey === key) return prev
             let newState = [...prev, fichaActual]
 
             if(newState.length === 1){
@@ -21,8 +22,20 @@ function Tablero({ cantParesAJugar }) {
                     newState[1].status = 2
                     if(newState[0].pairId === newState[1].pairId){
                         newState.forEach(f => f.status = 3)
+                        // return []
                     } else {
                         newState.forEach(f => f.status = 0)
+                        // setTimeout(() => {
+                        //     setFichas(prevFichas => {
+                        //         return prevFichas.map(f => {
+                        //         if(f.myKey === newState[0].myKey || f.myKey === newState[1].myKey){
+                        //             return {...f, status: 0}
+                        //         }
+                        //         return f
+                        //         })
+                        //     })
+                        // }, 1500)
+                        // return newState
                     }
                     return []
                 }

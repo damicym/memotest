@@ -1,1 +1,10 @@
-que se valide si no se toco la misma ficha
+darle tiempo a ver errores
+hacer que se termine una partida
+Pista y Rendirse
+
+tablero / fichas responsive
+
+animacion al dar vuelta
+efecto a fichas adivinadas
+animacion cuando tocas una ficha ya tocada
+feeback de hacer cosas bien o mal

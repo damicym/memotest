@@ -26,13 +26,17 @@ export function getRandomIcon() {
 
 export function inicializarFichas(cantParesAJugar) {
     let auxFichas = []
-    const colorOffset = Math.random() * 360 / cantParesAJugar
     let keyCounter = 0
+    const colorOffset = Math.random() * 360 / cantParesAJugar
     for (let index = 0; index < cantParesAJugar; index++) {
         const { Icon, name } = getRandomIcon()
-        const colorError = 360 / cantParesAJugar * index * 5 / 100
-        const colorHue = (360 / cantParesAJugar * index) + (Math.random() * 2 * colorError) - colorError + colorOffset
+
+        const colorSection = 360 / cantParesAJugar * index
+        const colorErrorPerc = 360 / cantParesAJugar * index * 5 / 100
+        const colorError = (Math.random() * 2 * colorErrorPerc) - colorErrorPerc
+        const colorHue = colorSection + colorError + colorOffset
         const colorFinal = `hsla(${colorHue}, 40%, 40%, 1)`
+
         auxFichas.push({ myKey: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: 0 })
         auxFichas.push({ myKey: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: 0 })
     }
