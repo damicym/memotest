@@ -24,7 +24,7 @@ export function getReadableRGB() {
     } while (L < min || L > max)
     return `rgba(${r}, ${g}, ${b}, 1)`
 }
-function generarError(num, error = 0){
+export function generarError(num, error = 0){
     const errPerc = (Math.random() * 2 * error) - error
     return num + num * errPerc / 100
 }
@@ -66,3 +66,21 @@ export function getClosestNotPrime(n, direction = 'up') {
     } while (isPrime(n));
     return n;
 }
+
+// export function getIndexsByAttributeValue(array, key, value){
+//     let found = []
+//     for (let index = 0; index < array.length; index++) {
+//         const element = array[index]
+//         if(element[key] === value) found.push(index)
+//     }
+//     return found
+// }
+
+// export function getElementsByAttributeValue(array, key, value){
+//     let found = []
+//     for (let index = 0; index < array.length; index++) {
+//         const element = array[index]
+//         if(element[key] === value) found.push(element)
+//     }
+//     return found
+// }
