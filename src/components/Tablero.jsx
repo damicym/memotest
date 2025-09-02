@@ -7,40 +7,45 @@ import { inicializarFichas } from '../libs/icons'
 function Tablero({ cantParesAJugar }) {
     const [fichas, setFichas] = useState([])
     const [columns, setColumns] = useState(0)
-    const [fichasTocadas, setFichasTocadas] = useState([])
+    const [lock, setLock] = useState(false)
+
+    const esconderDsps = (a, b) => { // a y b son fichas
+        const waitTime = 1.2 * 1000
+        setTimeout(() => {
+            setFichas(prev => {
+                let next = prev.map(ficha => 
+                ficha.id === a.id || ficha.id === b.id ? { ...ficha, status: 0 } : ficha
+                )
+                return next
+            })
+            setLock(false)
+        }, waitTime)
+    }
 
     const handleClickFicha = key => {
-        setFichasTocadas(prev => {  
-            const fichaActual = fichas.find(f => f.myKey === key)
-            if(prev[0]?.myKey === key) return prev
-            let newState = [...prev, fichaActual]
-
-            if(newState.length === 1){
-                newState[0].status = 1
-            } else{
-                if(newState.length === 2){
-                    newState[1].status = 2
-                    if(newState[0].pairId === newState[1].pairId){
-                        newState.forEach(f => f.status = 3)
-                        // return []
-                    } else {
-                        newState.forEach(f => f.status = 0)
-                        // setTimeout(() => {
-                        //     setFichas(prevFichas => {
-                        //         return prevFichas.map(f => {
-                        //         if(f.myKey === newState[0].myKey || f.myKey === newState[1].myKey){
-                        //             return {...f, status: 0}
-                        //         }
-                        //         return f
-                        //         })
-                        //     })
-                        // }, 1500)
-                        // return newState
-                    }
-                    return []
+        if (lock) return // hacer q se cancele animacion
+        const fichaActual = fichas.find(f => f.id === key)
+        if (!fichaActual) return
+        if (fichaActual.status !== 0) return
+        setFichas(prev => {
+            // agregar ficha tocada a 'abiertas'
+            let next = prev.map(ficha => ficha.id === key ? { ...ficha, status: 1 } : ficha)
+            const abiertas = next.filter(f => f.status === 1)
+            // decidir si puso las 2 bien
+            if (abiertas.length === 2){
+                const [a, b] = abiertas
+                if (a.pairId === b.pairId) {
+                    next = next.map(f =>
+                    f.id === a.id || f.id === b.id ? { ...f, status: 2 } : f
+                    )
+                    return next
+                } else {
+                    setLock(true)
+                    esconderDsps(a, b)
+                    return next
                 }
             }
-            return newState
+            return next
         })
     }
 
@@ -50,18 +55,14 @@ function Tablero({ cantParesAJugar }) {
     }, [cantParesAJugar])
 
     return (
-    <section className='tablero' style={{gridTemplateColumns: `repeat(${columns}, max-content)`}}>
+    <section className='tablero' style={{gridTemplateColumns: `repeat(${columns}, minmax(0, min(100px, ${100 / columns}vw)))`}}>
         {
-            fichas.map((ficha, index) => (
+            fichas?.map((ficha, index) => (
                 <Ficha 
-                    key={index} 
-                    myKey={ficha.myKey}
-                    pairId={ficha.pairId}
-                    name={ficha.name} 
-                    Icon={ficha.Icon} 
-                    color={ficha.color} 
-                    status={ficha.status}
+                    key={index}
+                    ficha={ficha}
                     handleClick={handleClickFicha}
+                    lockState={lock}
                 />
             ))
         }

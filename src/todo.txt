@@ -7,4 +7,6 @@ tablero / fichas responsive
 animacion al dar vuelta
 efecto a fichas adivinadas
 animacion cuando tocas una ficha ya tocada
-feeback de hacer cosas bien o mal
+feeback de hacer cosas bien o mal (confeti de iconos)
+
+cancelar animacion dsps de tocar si esta lock

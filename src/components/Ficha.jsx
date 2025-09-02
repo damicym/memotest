@@ -1,24 +1,34 @@
 import { PiSealQuestionBold  as HiddenIcon} from "react-icons/pi"
 
-function Ficha({ myKey, pairId, name, Icon, color, status, handleClick }){
+function Ficha({ ficha, handleClick, lockState }){
+    const { id, pairId, name, Icon, color, status } = ficha
     const alphaColor = color.replace('1)', '0.5)')
 
     return (
         <div 
-        onClick={() => handleClick(myKey)}
+        onClick={() => handleClick(id)}
         className="ficha" 
-        style={!status ? { borderColor: 'gray', backgroundColor: 'lightgray', cursor: 'pointer', filter: 'drop-shadow(0px 0px 1px var(--dark))' } : { borderColor: alphaColor, backgroundColor: 'var(--lightGray)'}}
+        style={ !status ? { 
+            borderColor: 'gray', 
+            backgroundColor: 'lightgray', 
+            filter: 'drop-shadow(0px 0px 1px var(--dark))', 
+            cursor: !lockState ? 'pointer' : 'auto'
+        } : { 
+                borderColor: alphaColor, 
+                backgroundColor: 'var(--lightGray)'
+            }
+        }
         >
             {
             !status
             ? <>
                 <div className="svg-container">
-                    <HiddenIcon color='gray' size='50'></HiddenIcon> 
+                    <HiddenIcon color='gray' size='40'></HiddenIcon> 
                 </div>
             </>
             : <>
                 <div className="svg-container">
-                    <Icon color={color} size='50'></Icon>
+                    <Icon color={color} size='40'></Icon>
                 </div>
                 <p style={{color: color}}>{name}</p>
             </>

@@ -37,8 +37,8 @@ export function inicializarFichas(cantParesAJugar) {
         const colorHue = colorSection + colorError + colorOffset
         const colorFinal = `hsla(${colorHue}, 40%, 40%, 1)`
 
-        auxFichas.push({ myKey: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: 0 })
-        auxFichas.push({ myKey: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: 0 })
+        auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: 0 })
+        auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: 0 })
     }
     return shuffle(auxFichas)
 }
