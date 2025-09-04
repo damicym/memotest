@@ -20,8 +20,8 @@ function Opciones({ cantParesAJugar, setCantParesAJugar, prevValuePares, reset }
     return (
         <section className='opciones'>
             <div className="campo">
-            <label>Cantidad de pares de fichas ({cantParesAJugar})</label>
-            <input className="controls" type='range' min="4" step="1" max="50" onChange={ (e) => handleChange(e) } value={cantParesAJugar}></input>
+                <label>Cantidad de pares de fichas ({cantParesAJugar})</label>
+                <input className="controls" type='range' min="4" step="1" max="50" onChange={ (e) => handleChange(e) } value={cantParesAJugar}></input>
             </div>
             <button className="controls" onClick={() => hint()}>Pista</button>
             <button className="controls" onClick={() => giveUp()}>Rendirse</button>

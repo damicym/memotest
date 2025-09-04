@@ -1,12 +1,14 @@
-darle tiempo a ver errores
-hacer que se termine una partida
 Pista y Rendirse
+hacer que se termine una partida
+cancelar animacion dsps de tocar si esta lock
 
-tablero / fichas responsive
+responsive
+- hacer q las fichas respeten los espacios del grid
+- sacar gap extra vertical
+- hacer q sea responsive en vertical
+- hacer q se centre cuando queda muy pegado a los bordes
 
 animacion al dar vuelta
 efecto a fichas adivinadas
 animacion cuando tocas una ficha ya tocada
 feeback de hacer cosas bien o mal (confeti de iconos)
-
-cancelar animacion dsps de tocar si esta lock

@@ -4,7 +4,7 @@ import Ficha from './Ficha'
 import { defineColumns } from '../libs/myFunctions'
 import { inicializarFichas } from '../libs/icons'
 
-function Tablero({ cantParesAJugar }) {
+function Tablero({ cantParesAJugar, sumarClick, setPairsLeft }) {
     const [fichas, setFichas] = useState([])
     const [columns, setColumns] = useState(0)
     const [lock, setLock] = useState(false)
@@ -23,10 +23,11 @@ function Tablero({ cantParesAJugar }) {
     }
 
     const handleClickFicha = key => {
-        if (lock) return // hacer q se cancele animacion
+        if (lock) return // hacer q se cancele animacion (setlock false y return. poner feedback de q se unlockeo?)
         const fichaActual = fichas.find(f => f.id === key)
         if (!fichaActual) return
         if (fichaActual.status !== 0) return
+        sumarClick()
         setFichas(prev => {
             // agregar ficha tocada a 'abiertas'
             let next = prev.map(ficha => ficha.id === key ? { ...ficha, status: 1 } : ficha)
@@ -35,8 +36,8 @@ function Tablero({ cantParesAJugar }) {
             if (abiertas.length === 2){
                 const [a, b] = abiertas
                 if (a.pairId === b.pairId) {
-                    next = next.map(f =>
-                    f.id === a.id || f.id === b.id ? { ...f, status: 2 } : f
+                    next = next.map(ficha =>
+                    ficha.id === a.id || ficha.id === b.id ? { ...ficha, status: 2 } : ficha
                     )
                     return next
                 } else {
@@ -53,6 +54,14 @@ function Tablero({ cantParesAJugar }) {
         setFichas(inicializarFichas(cantParesAJugar))
         setColumns(defineColumns(cantParesAJugar))
     }, [cantParesAJugar])
+
+    useEffect(() => {
+        if (fichas.length > 0) {
+            const pairs = fichas.filter(f => f.status === 2).length / 2
+            setPairsLeft(pairs)
+        }
+    }, [fichas])
+
 
     return (
     <section className='tablero' style={{gridTemplateColumns: `repeat(${columns}, minmax(0, min(100px, ${100 / columns}vw)))`}}>
