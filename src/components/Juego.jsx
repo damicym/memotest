@@ -20,8 +20,6 @@ function Juego() {
 
   useEffect(() => {
     reset()
-    setFichas(inicializarFichas(qPlayedPairs))
-    setColumns(defineColumns(qPlayedPairs))
   }, [qPlayedPairs])
 
   useEffect(() => {
@@ -46,6 +44,8 @@ function Juego() {
     setQPairsLeft(0)
     setLock(false)
     setFichas(inicializarFichas(qPlayedPairs))
+    setColumns(defineColumns(qPlayedPairs))
+    setHintActive(false)
   }
 
   const hint = () => {
