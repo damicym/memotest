@@ -1,23 +1,25 @@
-import { PiSealQuestionBold  as HiddenIcon} from "react-icons/pi"
+import { PiSealQuestionBold as HiddenIcon} from "react-icons/pi"
 
 function Ficha({ ficha, handleClick, lockState }){
-    const { id, pairId, name, Icon, color, status } = ficha
+    const { id, pairId, name, Icon, color, status, beingHinted } = ficha
     const alphaColor = color.replace('1)', '0.5)')
 
     return (
         <div 
         onClick={() => handleClick(id)}
-        className="ficha" 
-        style={ !status ? { 
-            borderColor: 'gray', 
-            backgroundColor: 'lightgray', 
-            filter: 'drop-shadow(0px 0px 1px var(--dark))', 
-            cursor: !lockState ? 'pointer' : 'auto'
-        } : { 
+        className={`ficha${beingHinted ? ' hinted' : ''}`}
+        style={{
+            '--hint-color': color,
+            ...(!status ? {
+                borderColor: 'gray', 
+                backgroundColor: 'lightgray', 
+                filter: 'drop-shadow(0px 0px 1px var(--dark))', 
+                cursor: !lockState ? 'pointer' : 'auto'
+            } : { 
                 borderColor: alphaColor, 
                 backgroundColor: 'var(--lightGray)'
-            }
-        }
+            })
+        }}
         >
             {
             !status

@@ -1,5 +1,5 @@
-Pista y Rendirse
 hacer que se termine una partida
+Rendirse
 cancelar animacion dsps de tocar si esta lock
 
 responsive

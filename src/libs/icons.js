@@ -24,21 +24,21 @@ export function getRandomIcon() {
     return allIconsWNames[randomIndex]
 }
 
-export function inicializarFichas(cantParesAJugar) {
+export function inicializarFichas(qPlayedPairs) {
     let auxFichas = []
     let keyCounter = 0
-    const colorOffset = Math.random() * 360 / cantParesAJugar
-    for (let index = 0; index < cantParesAJugar; index++) {
+    const colorOffset = Math.random() * 360 / qPlayedPairs
+    for (let index = 0; index < qPlayedPairs; index++) {
         const { Icon, name } = getRandomIcon()
 
-        const colorSection = 360 / cantParesAJugar * index
-        const colorErrorPerc = 360 / cantParesAJugar * index * 5 / 100
+        const colorSection = 360 / qPlayedPairs * index
+        const colorErrorPerc = 360 / qPlayedPairs * index * 5 / 100
         const colorError = (Math.random() * 2 * colorErrorPerc) - colorErrorPerc
         const colorHue = colorSection + colorError + colorOffset
         const colorFinal = `hsla(${colorHue}, 40%, 40%, 1)`
 
-        auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: 0 })
-        auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: 0 })
+        auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: 0, beingHinted: false })
+        auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: 0, beingHinted: false })
     }
     return shuffle(auxFichas)
 }

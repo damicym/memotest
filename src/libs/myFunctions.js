@@ -2,14 +2,14 @@ export function splitCamelCase(str) {
     return str.replace(/([A-Z])/g, ' $1').trim()
 }
 
-export function deleteExtraWords(str, cantWords) {
+export function deleteExtraWords(str, qWords) {
     const indices = []
     for (let i = 0; i < str.length; i++) {
         if (str[i] === " ") {
             indices.push(i)
         }
     }
-    return str.slice(indices[cantWords - 1])
+    return str.slice(indices[qWords - 1])
 }
 
 export function getReadableRGB() {
@@ -66,21 +66,3 @@ export function getClosestNotPrime(n, direction = 'up') {
     } while (isPrime(n));
     return n;
 }
-
-// export function getIndexsByAttributeValue(array, key, value){
-//     let found = []
-//     for (let index = 0; index < array.length; index++) {
-//         const element = array[index]
-//         if(element[key] === value) found.push(index)
-//     }
-//     return found
-// }
-
-// export function getElementsByAttributeValue(array, key, value){
-//     let found = []
-//     for (let index = 0; index < array.length; index++) {
-//         const element = array[index]
-//         if(element[key] === value) found.push(element)
-//     }
-//     return found
-// }
