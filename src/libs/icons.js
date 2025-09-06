@@ -24,15 +24,15 @@ export function getRandomIcon() {
     return allIconsWNames[randomIndex]
 }
 
-export function inicializarFichas(qPlayedPairs) {
+export function inicializarFichas(totalPairs) {
     let auxFichas = []
     let keyCounter = 0
-    const colorOffset = Math.random() * 360 / qPlayedPairs
-    for (let index = 0; index < qPlayedPairs; index++) {
+    const colorOffset = Math.random() * 360 / totalPairs
+    for (let index = 0; index < totalPairs; index++) {
         const { Icon, name } = getRandomIcon()
 
-        const colorSection = 360 / qPlayedPairs * index
-        const colorErrorPerc = 360 / qPlayedPairs * index * 5 / 100
+        const colorSection = 360 / totalPairs * index
+        const colorErrorPerc = 360 / totalPairs * index * 5 / 100
         const colorError = (Math.random() * 2 * colorErrorPerc) - colorErrorPerc
         const colorHue = colorSection + colorError + colorOffset
         const colorFinal = `hsla(${colorHue}, 40%, 40%, 1)`

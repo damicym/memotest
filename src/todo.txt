@@ -1,3 +1,4 @@
+loading al hint
 hacer que se termine una partida
 Rendirse
 cancelar animacion dsps de tocar si esta lock

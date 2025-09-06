@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Tablero from './Tablero'
 import Opciones from './Opciones'
 import Stats from './Stats'
@@ -8,24 +7,24 @@ import { inicializarFichas } from '../libs/icons'
 
 function Juego() {
   const [fichas, setFichas] = useState([])
-  const [lock, setLock] = useState(false)
+  const [isBoardLocked, setIsBoardLocked] = useState(false) // depsues de tocar una ficha incorrecta se lockea el juego por un tiempo
   const [columns, setColumns] = useState(0)
-  const [qPlayedPairs, setQPlayedPairs] = useState(10)
-  const prevValuePares = useRef(10)
-  const [resetKey, setResetKey] = useState(0)
+  const [totalPairs, setTotalPairs] = useState(10)
+  const prevValuePairs = useRef(10)
+  // const [resetKey, setResetKey] = useState(0)
   const [clicks, setClicks] = useState(0)
   const [gameStatus, setGameStatus] = useState(false)
-  const [qPairsLeft, setQPairsLeft] = useState(0)
+  const [qGuessedPairs, setQGuessedPairs] = useState(0)
   const [hintActive, setHintActive] = useState(false)
 
   useEffect(() => {
     reset()
-  }, [qPlayedPairs])
+  }, [totalPairs])
 
   useEffect(() => {
     if (fichas.length > 0) {
-        const qPairsLeft = fichas.filter(ficha => ficha.status === 2).length / 2
-        setQPairsLeft(qPairsLeft)
+        const qGuessedPairs = fichas.filter(ficha => ficha.status === 2).length / 2
+        setQGuessedPairs(qGuessedPairs)
     }
   }, [fichas])
 
@@ -38,13 +37,13 @@ function Juego() {
 
   // para opciones:
   const reset = () => {
-    setResetKey(prev => prev + 1)
+    // setResetKey(prev => prev + 1)
     setClicks(0)
     setGameStatus(false)
-    setQPairsLeft(0)
-    setLock(false)
-    setFichas(inicializarFichas(qPlayedPairs))
-    setColumns(defineColumns(qPlayedPairs))
+    setQGuessedPairs(0)
+    setIsBoardLocked(false)
+    setFichas(inicializarFichas(totalPairs))
+    setColumns(defineColumns(totalPairs))
     setHintActive(false)
   }
 
@@ -84,9 +83,9 @@ function Juego() {
   return (
     <main className="juego">
       <Opciones
-        qPlayedPairs={qPlayedPairs} 
-        setQPlayedPairs={setQPlayedPairs} 
-        prevValuePares={prevValuePares}
+        totalPairs={totalPairs} 
+        setTotalPairs={setTotalPairs} 
+        prevValuePairs={prevValuePairs}
         reset={reset} 
         hint={hint}
         giveUp={giveUp}
@@ -94,18 +93,18 @@ function Juego() {
         hintActive={hintActive}
       />
       <Stats
-        totalPairs={qPlayedPairs}
-        qPairsLeft={qPairsLeft}
+        totalPairs={totalPairs}
+        qGuessedPairs={qGuessedPairs}
         clicks={clicks}
         gameStatus={gameStatus}
       />
       <Tablero 
-      key={resetKey} 
+      // key={resetKey} 
       fichas={fichas}
       setFichas={setFichas}
       columns={columns}
-      lock={lock}
-      setLock={setLock}
+      isBoardLocked={isBoardLocked}
+      setIsBoardLocked={setIsBoardLocked}
       sumarClick={sumarClick}
       />
     </main>

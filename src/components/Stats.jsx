@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
 
-function Stats({ totalPairs, qPairsLeft, clicks, gameStatus }){
+function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
     const [puntos, setPuntos] = useState("...")
     const [seconds, setSeconds] = useState(0)
-    
 
     useEffect(() => {
         const timeBetween = 0.6 * 1000
@@ -41,7 +40,7 @@ function Stats({ totalPairs, qPairsLeft, clicks, gameStatus }){
                 </div>
         :  
             <>
-                <p>Pares encontrados: {qPairsLeft}/{totalPairs}</p>
+                <p>Pares encontrados: {qGuessedPairs}/{totalPairs}</p>
                 <p>Clicks: {clicks}</p>
                 <p>Tiempo: {seconds}s</p>
             </>

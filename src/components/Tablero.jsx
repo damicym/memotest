@@ -2,7 +2,7 @@ import Ficha from './Ficha'
 // import { useState } from 'react'
 // import { useEffect } from 'react'
 
-function Tablero({ fichas, setFichas, columns, lock, setLock, sumarClick }) {
+function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick }) {
 
     const esconderDsps = (a, b) => { // a y b son fichas
         const waitTime = 1.2 * 1000
@@ -13,12 +13,12 @@ function Tablero({ fichas, setFichas, columns, lock, setLock, sumarClick }) {
                 )
                 return next
             })
-            setLock(false)
+            setIsBoardLocked(false)
         }, waitTime)
     }
 
     const handleClickFicha = key => {
-        if (lock) return // hacer q se cancele animacion (setlock false y return. poner feedback de q se unlockeo?)
+        if (isBoardLocked) return // hacer q se cancele animacion (setlock false y return. poner feedback de q se unlockeo?)
         const fichaActual = fichas.find(ficha => ficha.id === key)
         if (!fichaActual) return
         if (fichaActual.status !== 0) return
@@ -36,7 +36,7 @@ function Tablero({ fichas, setFichas, columns, lock, setLock, sumarClick }) {
                     )
                     return next
                 } else {
-                    setLock(true)
+                    setIsBoardLocked(true)
                     esconderDsps(a, b)
                     return next
                 }
@@ -53,7 +53,7 @@ function Tablero({ fichas, setFichas, columns, lock, setLock, sumarClick }) {
                     key={index}
                     ficha={ficha}
                     handleClick={handleClickFicha}
-                    lockState={lock}
+                    lockState={isBoardLocked}
                 />
             ))
         }
