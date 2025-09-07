@@ -149,6 +149,36 @@ button.controls{
   cursor: pointer;
   padding: 5px;
 }
+.loadingHint{
+  position: relative;
+}
+
+.loadingHint::after {
+  border-radius: 8px;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: calc(100%);
+  background-color: color-mix(in srgb, var(--accent), transparent 50%);
+  animation: agrandar0a100 8s linear;
+}
+
+.bounce{
+  animation: scale2times 0.9s ease-out;
+}
+
+@keyframes scale2times { 
+  0%, 50%, 100% { transform: scale(1); }
+  25%, 75% { transform: scale(1.05); }
+}
+
+@keyframes agrandar0a100 {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
 .campo{
   display: flex;
   align-items: center;
@@ -168,7 +198,7 @@ input[type="range"] {
 }
 
 .ficha.hinted {
-  animation: hint 1.4s ease-in-out;
+  animation: hint 1.5s ease-in-out;
 }
 
 @keyframes hint {

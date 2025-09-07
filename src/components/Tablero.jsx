@@ -1,11 +1,10 @@
 import Ficha from './Ficha'
-// import { useState } from 'react'
-// import { useEffect } from 'react'
+import { FICHA_STATUS } from './Juego'
 
 function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick }) {
 
     const esconderDsps = (a, b) => { // a y b son fichas
-        const waitTime = 1.2 * 1000
+        const waitTime = 1.05 * 1000
         setTimeout(() => {
             setFichas(prev => {
                 let next = prev.map(ficha => 
@@ -21,12 +20,12 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
         if (isBoardLocked) return // hacer q se cancele animacion (setlock false y return. poner feedback de q se unlockeo?)
         const fichaActual = fichas.find(ficha => ficha.id === key)
         if (!fichaActual) return
-        if (fichaActual.status !== 0) return
+        if (fichaActual.status !== FICHA_STATUS.ESCONDIDA) return
         sumarClick()
         setFichas(prev => {
             // agregar ficha tocada a 'abiertas'
             let next = prev.map(ficha => ficha.id === key ? { ...ficha, status: 1 } : ficha)
-            const abiertas = next.filter(ficha => ficha.status === 1)
+            const abiertas = next.filter(ficha => ficha.status === FICHA_STATUS.MOSTRADA)
             // decidir si puso las 2 bien
             if (abiertas.length === 2){
                 const [a, b] = abiertas

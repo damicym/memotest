@@ -5,6 +5,19 @@ import Stats from './Stats'
 import { defineColumns } from '../libs/myFunctions'
 import { inicializarFichas } from '../libs/icons'
 
+export const FICHA_STATUS = Object.freeze({
+  ESCONDIDA: 0,
+  MOSTRADA: 1,
+  ADIVINADA: 2
+})
+
+export const GAME_STATUS = Object.freeze({
+  NOT_STARTED: 0,
+  STARTED: 1,
+  WON: 2,
+  GIVEN_UP: 3
+})
+
 function Juego() {
   const [fichas, setFichas] = useState([])
   const [isBoardLocked, setIsBoardLocked] = useState(false) // depsues de tocar una ficha incorrecta se lockea el juego por un tiempo
@@ -13,9 +26,10 @@ function Juego() {
   const prevValuePairs = useRef(10)
   // const [resetKey, setResetKey] = useState(0)
   const [clicks, setClicks] = useState(0)
-  const [gameStatus, setGameStatus] = useState(false)
+  const [gameStatus, setGameStatus] = useState(GAME_STATUS.NOT_STARTED)
   const [qGuessedPairs, setQGuessedPairs] = useState(0)
   const [hintActive, setHintActive] = useState(false)
+  const wasHintActive = useRef(false)
 
   useEffect(() => {
     reset()
@@ -23,14 +37,25 @@ function Juego() {
 
   useEffect(() => {
     if (fichas.length > 0) {
-        const qGuessedPairs = fichas.filter(ficha => ficha.status === 2).length / 2
+        const qGuessedPairs = fichas.filter(ficha => ficha.status === FICHA_STATUS.ADIVINADA).length / 2
         setQGuessedPairs(qGuessedPairs)
     }
   }, [fichas])
 
+  useEffect(() => {
+    if(qGuessedPairs === totalPairs) setGameStatus(GAME_STATUS.WON)
+  }, [qGuessedPairs])
+
+  useEffect(() => {
+    // ver si poner condiciones para los demás estados
+    if(gameStatus === GAME_STATUS.GIVEN_UP){
+
+    }
+  }, [gameStatus])
+
   const sumarClick = () => {
     setClicks(prev => {
-      if(!prev && !gameStatus) setGameStatus(true)
+      if(prev === 0 && gameStatus === GAME_STATUS.NOT_STARTED) setGameStatus(GAME_STATUS.STARTED)
       return prev + 1
     })
   }
@@ -39,18 +64,19 @@ function Juego() {
   const reset = () => {
     // setResetKey(prev => prev + 1)
     setClicks(0)
-    setGameStatus(false)
+    setGameStatus(GAME_STATUS.NOT_STARTED)
     setQGuessedPairs(0)
     setIsBoardLocked(false)
     setFichas(inicializarFichas(totalPairs))
     setColumns(defineColumns(totalPairs))
     setHintActive(false)
+    wasHintActive.current = false
   }
 
   const hint = () => {
     setFichas(prev => {
       if (!prev || prev.length === 0) return prev
-      const candidatas = prev.filter(ficha => ficha.status !== 2)
+      const candidatas = prev.filter(ficha => ficha.status !== FICHA_STATUS.ADIVINADA)
       if (candidatas.length === 0) return prev
       setHintActive(true)
       const elegida = candidatas[Math.floor(Math.random() * candidatas.length)]
@@ -65,6 +91,7 @@ function Juego() {
 
   useEffect(() => {
     if (!hintActive) return
+    wasHintActive.current = true
     const timeTo = 8 * 1000
     const timer = setTimeout(() => {
       setHintActive(false)
@@ -77,7 +104,7 @@ function Juego() {
   }, [hintActive])
 
   const giveUp = () => {
-
+    setGameStatus(GAME_STATUS.GIVEN_UP)
   }
 
   return (
@@ -91,6 +118,7 @@ function Juego() {
         giveUp={giveUp}
         gameStatus={gameStatus}
         hintActive={hintActive}
+        wasHintActive={wasHintActive}
       />
       <Stats
         totalPairs={totalPairs}

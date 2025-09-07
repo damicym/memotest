@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
+import { GAME_STATUS } from './Juego'
 
 function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
     const [puntos, setPuntos] = useState("...")
@@ -8,7 +9,7 @@ function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
     useEffect(() => {
         const timeBetween = 0.6 * 1000
         const waitingInterval = setInterval(() => {
-            if(gameStatus) {
+            if(gameStatus === GAME_STATUS.STARTED) {
                 clearInterval(waitingInterval)
                 return
             }
@@ -23,17 +24,19 @@ function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
     }, [])
 
     useEffect(() => {
-        if(!gameStatus) return
-        setSeconds(0)
-        const secondsInterval = setInterval(() => {
-            setSeconds(prev => prev + 1)
-        }, 1000)
-        return () => clearInterval(secondsInterval)
+        // if(gameStatus === GAME_STATUS.NOT_STARTED || gameStatus === GAME_STATUS.WON) return
+        if(gameStatus === GAME_STATUS.STARTED){
+            setSeconds(0)
+            const secondsInterval = setInterval(() => {
+                setSeconds(prev => prev + 1)
+            }, 1000)
+            return () => clearInterval(secondsInterval)
+        }
     }, [gameStatus])
 
     return (
        <section className='stats'>
-        { !gameStatus ? 
+        { gameStatus === GAME_STATUS.NOT_STARTED ? 
                 <div className='waiting'>
                     <p>Esperando a que empieces a jugar para mostrar estadísticas</p>
                     <p>{puntos}</p>

@@ -1,7 +1,8 @@
-loading al hint
-hacer que se termine una partida
 Rendirse
-cancelar animacion dsps de tocar si esta lock
+- ponerle condiciones al useEffect de gameStatus
+- ver si le poners condiciones para los demas status (probablemente boludeces)
+
+¿cancelar animacion dsps de tocar si esta lock?
 
 responsive
 - hacer q las fichas respeten los espacios del grid
@@ -13,3 +14,9 @@ animacion al dar vuelta
 efecto a fichas adivinadas
 animacion cuando tocas una ficha ya tocada
 feeback de hacer cosas bien o mal (confeti de iconos)
+
+carteles
+
+dejar descargar canvas con stats
+- ¿mostrar preview?
+- hacerle frame y descargar
