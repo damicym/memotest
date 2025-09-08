@@ -1,8 +1,12 @@
-Rendirse
-- ponerle condiciones al useEffect de gameStatus
-- ver si le poners condiciones para los demas status (probablemente boludeces)
+animacion al dar vuelta
+efecto a fichas adivinadas
+¿animacion cuando tocas una ficha ya tocada?
+feeback de hacer cosas bien o mal (confeti de iconos)
 
-¿cancelar animacion dsps de tocar si esta lock?
+ver si le poners condiciones para los demas status
+- feedbacks
+- carteles
+- ¿otras cosas?
 
 responsive
 - hacer q las fichas respeten los espacios del grid
@@ -10,13 +14,8 @@ responsive
 - hacer q sea responsive en vertical
 - hacer q se centre cuando queda muy pegado a los bordes
 
-animacion al dar vuelta
-efecto a fichas adivinadas
-animacion cuando tocas una ficha ya tocada
-feeback de hacer cosas bien o mal (confeti de iconos)
-
-carteles
-
 dejar descargar canvas con stats
-- ¿mostrar preview?
+- ¿mostrar preview? seria un poco lo mismo q esta en el section de stats
 - hacerle frame y descargar
+
+¿cambiarle el nombre al repo?

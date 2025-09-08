@@ -8,7 +8,7 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
         setTimeout(() => {
             setFichas(prev => {
                 let next = prev.map(ficha => 
-                ficha.id === a.id || ficha.id === b.id ? { ...ficha, status: 0 } : ficha
+                ficha.id === a.id || ficha.id === b.id ? { ...ficha, status: FICHA_STATUS.ESCONDIDA } : ficha
                 )
                 return next
             })
@@ -24,14 +24,14 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
         sumarClick()
         setFichas(prev => {
             // agregar ficha tocada a 'abiertas'
-            let next = prev.map(ficha => ficha.id === key ? { ...ficha, status: 1 } : ficha)
+            let next = prev.map(ficha => ficha.id === key ? { ...ficha, status: FICHA_STATUS.MOSTRADA } : ficha)
             const abiertas = next.filter(ficha => ficha.status === FICHA_STATUS.MOSTRADA)
             // decidir si puso las 2 bien
             if (abiertas.length === 2){
                 const [a, b] = abiertas
                 if (a.pairId === b.pairId) {
                     next = next.map(ficha =>
-                    ficha.id === a.id || ficha.id === b.id ? { ...ficha, status: 2 } : ficha
+                    ficha.id === a.id || ficha.id === b.id ? { ...ficha, status: FICHA_STATUS.ADIVINADA } : ficha
                     )
                     return next
                 } else {

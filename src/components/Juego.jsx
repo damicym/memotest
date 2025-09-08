@@ -36,9 +36,9 @@ function Juego() {
   }, [totalPairs])
 
   useEffect(() => {
-    if (fichas.length > 0) {
-        const qGuessedPairs = fichas.filter(ficha => ficha.status === FICHA_STATUS.ADIVINADA).length / 2
-        setQGuessedPairs(qGuessedPairs)
+    if (fichas.length > 0 && gameStatus !== GAME_STATUS.GIVEN_UP) {
+      const qGuessedPairs = fichas.filter(ficha => ficha.status === FICHA_STATUS.ADIVINADA).length / 2
+      setQGuessedPairs(qGuessedPairs)
     }
   }, [fichas])
 
@@ -47,9 +47,13 @@ function Juego() {
   }, [qGuessedPairs])
 
   useEffect(() => {
-    // ver si poner condiciones para los demás estados
     if(gameStatus === GAME_STATUS.GIVEN_UP){
-
+      setFichas(prev => {
+        let next = prev.map(ficha =>
+        ({ ...ficha, status: FICHA_STATUS.ADIVINADA })
+        )
+        return next
+      })
     }
   }, [gameStatus])
 
