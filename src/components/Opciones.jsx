@@ -27,14 +27,14 @@ function Opciones({ totalPairs, setTotalPairs, prevValuePairs, reset, hint, give
             <button 
             className={`controls ${hintActive ? 'loadingHint' : wasHintActive.current ? 'bounce' : ''}`} 
             onClick={hint} 
-            disabled={gameStatus === GAME_STATUS.NOT_STARTED || gameStatus === GAME_STATUS.GIVEN_UP || hintActive} 
+            disabled={gameStatus !== GAME_STATUS.STARTED || hintActive} 
             >
                 Pista
             </button>
             <button 
             className="controls" 
             onClick={giveUp} 
-            disabled={gameStatus === GAME_STATUS.NOT_STARTED || gameStatus === GAME_STATUS.GIVEN_UP} 
+            disabled={gameStatus !== GAME_STATUS.STARTED} 
             >
                 Rendirse
             </button>

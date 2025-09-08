@@ -1,7 +1,8 @@
 import { PiSealQuestionBold as HiddenIcon} from "react-icons/pi"
+import { FICHA_STATUS } from "./Juego"
 
 function Ficha({ ficha, handleClick, lockState }){
-    const { id, pairId, name, Icon, color, status, beingHinted } = ficha
+    const { id, name, Icon, color, status, beingHinted } = ficha
     const alphaColor = color.replace('1)', '0.5)')
 
     return (
@@ -10,7 +11,7 @@ function Ficha({ ficha, handleClick, lockState }){
         className={`ficha ${beingHinted ? 'hinted' : ''}`}
         style={{
             '--hint-color': color,
-            ...(!status ? {
+            ...(status === FICHA_STATUS.ESCONDIDA ? {
                 borderColor: 'gray', 
                 backgroundColor: 'lightgray', 
                 filter: 'drop-shadow(0px 0px 1px var(--dark))', 
@@ -22,7 +23,7 @@ function Ficha({ ficha, handleClick, lockState }){
         }}
         >
             {
-            !status
+            status === FICHA_STATUS.ESCONDIDA
             ? <>
                 <div className="svg-container">
                     <HiddenIcon color='gray' size='40'></HiddenIcon> 
