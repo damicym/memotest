@@ -1,10 +1,10 @@
 import Ficha from './Ficha'
 import { FICHA_STATUS } from './Juego'
+import { TIMINGS } from './Juego'
 
-function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick }) {
+function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick, shouldFichasAnimate }) {
 
     const esconderDsps = (a, b) => { // a y b son fichas
-        const waitTime = 1.05 * 1000
         setTimeout(() => {
             setFichas(prev => {
                 let next = prev.map(ficha => 
@@ -13,7 +13,7 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
                 return next
             })
             setIsBoardLocked(false)
-        }, waitTime)
+        }, TIMINGS.BEFORE_HIDING_FICHA)
     }
 
     const handleClickFicha = key => {
@@ -45,7 +45,7 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
     }
 
     return (
-    <section className='tablero' style={{gridTemplateColumns: `repeat(${columns}, minmax(0, min(100px, ${100 / columns}vw)))`}}>
+    <section className='tablero' style={{gridTemplateColumns: `repeat(${columns}, minmax(0, min(110px, ${100 / columns}vw)))`}}>
         {
             fichas?.map((ficha, index) => (
                 <Ficha 
@@ -53,6 +53,7 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
                     ficha={ficha}
                     handleClick={handleClickFicha}
                     lockState={isBoardLocked}
+                    shouldFichasAnimate={shouldFichasAnimate}
                 />
             ))
         }

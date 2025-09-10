@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { GAME_STATUS } from './Juego'
+import { TIMINGS } from './Juego'
 
 function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
     const [puntos, setPuntos] = useState("...")
     const [seconds, setSeconds] = useState(0)
 
     useEffect(() => {
-        const timeBetween = 0.6 * 1000
         const waitingInterval = setInterval(() => {
             if(gameStatus === GAME_STATUS.STARTED) {
                 clearInterval(waitingInterval)
@@ -19,7 +19,7 @@ function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
             else if (prev === "..") return "..."
             return "..."
             })
-        }, timeBetween)
+        }, TIMINGS.BETWEEN_ANIMATED_DOTS)
         return () => clearInterval(waitingInterval)
     }, [])
 

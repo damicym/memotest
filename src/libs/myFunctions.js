@@ -51,18 +51,19 @@ export function defineColumns(pares) {
     }
 }
 
-export function isPrime(n) {
-    if (n < 2) return false;
+export function isPrimeOrBanned(n, banned = []) {
+    if (n < 2) return false
+    if (banned.includes(n)) return true
     for (let i = 2; i <= Math.sqrt(n); i++) {
-        if (n % i === 0) return false;
+        if (n % i === 0) return false
     }
     return true;
 }
 
-export function getClosestNotPrime(n, direction = 'up') {
+export function getClosestNotPrimeOrBanned(n, direction = 'up', banned = []) {
     do {
-        if (direction === 'up') n++;
+        if (direction === 'up') n++
         else n--;
-    } while (isPrime(n));
+    } while (isPrimeOrBanned(n, banned))
     return n;
 }

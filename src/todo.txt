@@ -1,5 +1,14 @@
-animacion al dar vuelta
+cancelar animaciones despues de reset, win, o giveup (creo q usando ref)
+
+revisar comentarios
+
+que los segundos se pasen a minutos y horas
+
+fondo piola (¿textura a todos los sections?)
+
 efecto a fichas adivinadas
+
+
 ¿animacion cuando tocas una ficha ya tocada?
 feeback de hacer cosas bien o mal (confeti de iconos)
 
@@ -8,14 +17,15 @@ ver si le poners condiciones para los demas status
 - carteles
 - ¿otras cosas?
 
+
 responsive
-- hacer q las fichas respeten los espacios del grid
-- sacar gap extra vertical
 - hacer q sea responsive en vertical
-- hacer q se centre cuando queda muy pegado a los bordes
+
 
 dejar descargar canvas con stats
 - ¿mostrar preview? seria un poco lo mismo q esta en el section de stats
 - hacerle frame y descargar
+
+¿react router?
 
 ¿cambiarle el nombre al repo?

@@ -18,21 +18,28 @@ export const GAME_STATUS = Object.freeze({
   GIVEN_UP: 3
 })
 
+export const TIMINGS = Object.freeze({
+  BEFORE_HIDING_FICHA: 1.05 * 1000,
+  FICHA_FLIP: 0.5 * 1000,
+  HINT_COOLDOWN: 8 * 1000,
+  BETWEEN_ANIMATED_DOTS: 0.6 * 1000
+})
+
 function Juego() {
-  const [fichas, setFichas] = useState([])
-  const [isBoardLocked, setIsBoardLocked] = useState(false) // depsues de tocar una ficha incorrecta se lockea el juego por un tiempo
-  const [columns, setColumns] = useState(0)
   const [totalPairs, setTotalPairs] = useState(10)
   const prevValuePairs = useRef(10)
-  // const [resetKey, setResetKey] = useState(0)
+  const [fichas, setFichas] = useState([])
+  const [columns, setColumns] = useState(0)
+  const [isBoardLocked, setIsBoardLocked] = useState(false) // depsues de tocar una ficha incorrecta se lockea el juego por un tiempo
   const [clicks, setClicks] = useState(0)
   const [gameStatus, setGameStatus] = useState(GAME_STATUS.NOT_STARTED)
   const [qGuessedPairs, setQGuessedPairs] = useState(0)
   const [hintActive, setHintActive] = useState(false)
   const wasHintActive = useRef(false)
+  const [shouldFichasAnimate, setShouldFichasAnimate] = useState(true)
 
   useEffect(() => {
-    reset()
+    reset("totalPairsChange")
   }, [totalPairs])
 
   useEffect(() => {
@@ -47,7 +54,10 @@ function Juego() {
   }, [qGuessedPairs])
 
   useEffect(() => {
-    if(gameStatus === GAME_STATUS.GIVEN_UP){
+    if(gameStatus === GAME_STATUS.STARTED){
+      setShouldFichasAnimate(true)
+    }
+    else if(gameStatus === GAME_STATUS.GIVEN_UP){
       setFichas(prev => {
         let next = prev.map(ficha =>
         ({ ...ficha, status: FICHA_STATUS.ADIVINADA })
@@ -65,17 +75,38 @@ function Juego() {
   }
 
   // para opciones:
-  const reset = () => {
-    // setResetKey(prev => prev + 1)
+  const reset = (via = "resetBtn") => {
+    setIsBoardLocked(true)
+    setFichas(prev => {
+      let next = prev.map(ficha =>
+        ({ ...ficha, status: FICHA_STATUS.ESCONDIDA })
+      )
+      return next
+    })
+
     setClicks(0)
     setGameStatus(GAME_STATUS.NOT_STARTED)
-    setQGuessedPairs(0)
-    setIsBoardLocked(false)
-    setFichas(inicializarFichas(totalPairs))
     setColumns(defineColumns(totalPairs))
+    setQGuessedPairs(0)
     setHintActive(false)
     wasHintActive.current = false
+
+    if(via == "totalPairsChange"){
+      setShouldFichasAnimate(false)
+      setFichas(inicializarFichas(totalPairs))
+      setIsBoardLocked(false)
+    } else if(via == "resetBtn"){
+      setShouldFichasAnimate(true)
+      setTimeout(() => {
+        setFichas(inicializarFichas(totalPairs))
+        setIsBoardLocked(false)
+      }, TIMINGS.FICHA_FLIP)
+    }
   }
+  // que cuando se resetee por cambio de totalParis
+  // no se animen las fichas
+  // sí se deberian animar cuando:
+  // la primera vez que se toca, durante el juego, cuando se resetea desde el btn
 
   const hint = () => {
     setFichas(prev => {
@@ -96,13 +127,12 @@ function Juego() {
   useEffect(() => {
     if (!hintActive) return
     wasHintActive.current = true
-    const timeTo = 8 * 1000
     const timer = setTimeout(() => {
       setHintActive(false)
       setFichas(prev =>
         prev.map(ficha => ({ ...ficha, beingHinted: false }))
       )
-    }, timeTo)
+    }, TIMINGS.HINT_COOLDOWN)
 
     return () => clearTimeout(timer)
   }, [hintActive])
@@ -131,13 +161,13 @@ function Juego() {
         gameStatus={gameStatus}
       />
       <Tablero 
-      // key={resetKey} 
       fichas={fichas}
       setFichas={setFichas}
       columns={columns}
       isBoardLocked={isBoardLocked}
       setIsBoardLocked={setIsBoardLocked}
       sumarClick={sumarClick}
+      shouldFichasAnimate={shouldFichasAnimate}
       />
     </main>
   )
