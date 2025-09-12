@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { GAME_STATUS } from './Juego'
-import { TIMINGS } from './Juego'
+import { GAME_STATUS, TIMINGS } from './Juego'
+import { getFancyTimeBySecs } from '../libs/myFunctions'
+
 
 function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
     const [puntos, setPuntos] = useState("...")
-    const [seconds, setSeconds] = useState(0)
+    const [secondsInGame, setSeconds] = useState()
+    const [timeInGame, setTimeInGame] = useState(0)
 
     useEffect(() => {
         const waitingInterval = setInterval(() => {
@@ -24,7 +26,6 @@ function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
     }, [])
 
     useEffect(() => {
-        // if(gameStatus === GAME_STATUS.NOT_STARTED || gameStatus === GAME_STATUS.WON) return
         if(gameStatus === GAME_STATUS.STARTED){
             setSeconds(0)
             const secondsInterval = setInterval(() => {
@@ -33,6 +34,10 @@ function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
             return () => clearInterval(secondsInterval)
         }
     }, [gameStatus])
+
+    useEffect(() => {
+        setTimeInGame(getFancyTimeBySecs(secondsInGame))
+    }, [secondsInGame])
 
     return (
        <section className='stats'>
@@ -44,8 +49,8 @@ function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
         :  
             <>
                 <p>Pares encontrados: {qGuessedPairs}/{totalPairs}</p>
-                <p>Clicks: {clicks}</p>
-                <p>Tiempo: {seconds}s</p>
+                <p style={{width: '90px'}} >Clicks: {clicks}</p>
+                <p style={{width: '150px'}} >Tiempo: {timeInGame}</p>
             </>
         }
             

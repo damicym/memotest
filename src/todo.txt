@@ -1,15 +1,5 @@
-cancelar animaciones despues de reset, win, o giveup (creo q usando ref)
+efecto a fichas adivinadas (fallido)
 
-revisar comentarios
-
-que los segundos se pasen a minutos y horas
-
-fondo piola (¿textura a todos los sections?)
-
-efecto a fichas adivinadas
-
-
-¿animacion cuando tocas una ficha ya tocada?
 feeback de hacer cosas bien o mal (confeti de iconos)
 
 ver si le poners condiciones para los demas status

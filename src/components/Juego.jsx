@@ -22,7 +22,9 @@ export const TIMINGS = Object.freeze({
   BEFORE_HIDING_FICHA: 1.05 * 1000,
   FICHA_FLIP: 0.5 * 1000,
   HINT_COOLDOWN: 8 * 1000,
-  BETWEEN_ANIMATED_DOTS: 0.6 * 1000
+  BETWEEN_ANIMATED_DOTS: 0.6 * 1000,
+  // SHINE_DURATION: 2 * 1000,
+  // BETWEEN_FICHA_SHINE: 0.2 * 1000
 })
 
 function Juego() {
@@ -58,12 +60,15 @@ function Juego() {
       setShouldFichasAnimate(true)
     }
     else if(gameStatus === GAME_STATUS.GIVEN_UP){
+      setIsBoardLocked(true)
       setFichas(prev => {
         let next = prev.map(ficha =>
         ({ ...ficha, status: FICHA_STATUS.ADIVINADA })
         )
         return next
       })
+      setHintActive(false)
+      wasHintActive.current = false
     }
   }, [gameStatus])
 

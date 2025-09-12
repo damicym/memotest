@@ -67,3 +67,15 @@ export function getClosestNotPrimeOrBanned(n, direction = 'up', banned = []) {
     } while (isPrimeOrBanned(n, banned))
     return n;
 }
+
+export function getFancyTimeBySecs(initSecs) {
+    const hours = Math.floor(initSecs / 3600)
+    const minutes = Math.floor((initSecs % 3600) / 60)
+    const seconds = initSecs % 60
+    let facyTime
+    
+    if(hours) facyTime = `${hours}h+`
+    else if(minutes) facyTime = `${minutes}m ${seconds}s`
+    else facyTime = `${seconds}s`
+    return facyTime
+}

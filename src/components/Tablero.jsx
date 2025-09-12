@@ -1,8 +1,27 @@
 import Ficha from './Ficha'
-import { FICHA_STATUS } from './Juego'
-import { TIMINGS } from './Juego'
+import { FICHA_STATUS, TIMINGS } from './Juego'
+import { useEffect, useState } from 'react'
 
 function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick, shouldFichasAnimate }) {
+    // const [timeToShine, setTimeToShine] = useState(false)
+    // useEffect(() => {
+    //     let timeout
+    //     setTimeToShine(true)
+    //     timeout = setTimeout(() => setTimeToShine(false), TIMINGS.SHINE_DURATION)
+
+    //     const interval = setInterval(() => {
+    //         setTimeToShine(true)
+    //         timeout = setTimeout(() => {
+    //             setTimeToShine(false)
+    //         }, TIMINGS.SHINE_DURATION)
+    //     }, TIMINGS.BETWEEN_FICHA_SHINE + TIMINGS.SHINE_DURATION)
+
+    //     return () => {
+    //         clearInterval(interval)
+    //         clearTimeout(timeout)
+    //     }
+    // }, [])
+
 
     const esconderDsps = (a, b) => { // a y b son fichas
         setTimeout(() => {
@@ -17,7 +36,7 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
     }
 
     const handleClickFicha = key => {
-        if (isBoardLocked) return // hacer q se cancele animacion (setlock false y return. poner feedback de q se unlockeo?)
+        if (isBoardLocked) return
         const fichaActual = fichas.find(ficha => ficha.id === key)
         if (!fichaActual) return
         if (fichaActual.status !== FICHA_STATUS.ESCONDIDA) return
@@ -54,6 +73,7 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
                     handleClick={handleClickFicha}
                     lockState={isBoardLocked}
                     shouldFichasAnimate={shouldFichasAnimate}
+                    // timeToShine={timeToShine}
                 />
             ))
         }

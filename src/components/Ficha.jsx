@@ -1,12 +1,21 @@
 import { PiSealQuestionBold as HiddenIcon} from "react-icons/pi"
-import { FICHA_STATUS } from "./Juego"
-import { useState } from 'react'
+import { FICHA_STATUS, TIMINGS } from "./Juego"
+import { useEffect, useState } from 'react'
 
-function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate }){
+function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate /*, timeToShine*/ }){
     const [showShadow, setShowShadow] = useState(true)
+    // const [readyToShine, setReadyToShine] = useState(false)
 
     const { id, name, Icon, color, status, beingHinted } = ficha
     const alphaColor = color.replace('1)', '0.5)')
+
+    // useEffect(() => {
+    //     if(status === FICHA_STATUS.ADIVINADA){
+    //         setTimeout(() => {
+    //             setReadyToShine(true)
+    //         }, TIMINGS.BETWEEN_FICHA_SHINE + TIMINGS.SHINE_DURATION)
+    //     }
+    // }, [status])
 
     const handleTransitionStart = () => {
         if (status === FICHA_STATUS.ESCONDIDA) {
@@ -19,11 +28,14 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate }){
     return (
         <div 
             onClick={() => handleClick(id)}
-            className={`ficha ${beingHinted ? 'hinted' : ''} `}
+            //  && timeToShine 
+            className={`ficha ${beingHinted ? 'hinted' : ''} ${status === FICHA_STATUS.ADIVINADA ? 'adivinada' : ''}`}
             style={{
                 '--hint-color': color,
                 cursor: status === FICHA_STATUS.ESCONDIDA && !lockState  ? 'pointer' : 'auto',
-                filter: showShadow ? 'drop-shadow(0px 0px 1px var(--dark))' : 'none'
+                filter: showShadow ? 'drop-shadow(0px 0px 1px var(--dark))' : 'none',
+                transform: status === FICHA_STATUS.MOSTRADA ? 'scale(1.05)' : 'scale(1)',
+                // animation: status === FICHA_STATUS.ADIVINADA ? 'deScale 0.5s ease-in-out' : ''
             }}
         >
             <div className="ficha-inner"
