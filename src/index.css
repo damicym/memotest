@@ -80,7 +80,7 @@ html, body {
   height: 50px;
   color: var(--light);
   font-size: 1.1rem;
-  gap: 8%;
+  gap: 5%;
   justify-content: center;
   background:
     conic-gradient(from 135deg,#344966 90deg,#0000 0) 32px calc(32px/2),
@@ -246,20 +246,15 @@ input[type="range"] {
   transform: rotateY(180deg)
 }
 
-.ficha.adivinada {
+.ficha-front.adivinada {
   position: relative;
   overflow: hidden;
-}
-
-.ficha.adivinada {
-  /* position: relative;
-  overflow: hidden; */
-  transform: scale(1.05);
+  /* transform: scale(1.05); */
   /* animation: deScale 0.5s ease-in-out */
 }
 
-.ficha.adivinada::after {
-  /* content: '';
+.ficha-front.adivinada::after {
+  content: '';
   position: absolute;
   top: 0;
   left: -150%;
@@ -267,12 +262,14 @@ input[type="range"] {
   height: 100%;
   background: linear-gradient(
     120deg,
-    transparent 0%,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.05) 30%,
     rgba(255, 255, 255, 0.6) 50%,
-    transparent 100%
+    rgba(255, 255, 255, 0.05) 70%,
+    rgba(255, 255, 255, 0) 100%
   );
   transform: skewX(-20deg);
-  animation: shine 2s ease-in-out infinite; */
+  animation: shine 2s ease-in-out infinite;
 }
 
 @keyframes shine {

@@ -23,8 +23,9 @@ export const TIMINGS = Object.freeze({
   FICHA_FLIP: 0.5 * 1000,
   HINT_COOLDOWN: 8 * 1000,
   BETWEEN_ANIMATED_DOTS: 0.6 * 1000,
-  // SHINE_DURATION: 2 * 1000,
-  // BETWEEN_FICHA_SHINE: 0.2 * 1000
+  SHINE_DURATION: 2 * 1000,
+  BETWEEN_FICHA_SHINE: 0.2 * 1000,
+  SHINE_CYCLE: 2.2 * 1000
 })
 
 function Juego() {
@@ -34,8 +35,10 @@ function Juego() {
   const [columns, setColumns] = useState(0)
   const [isBoardLocked, setIsBoardLocked] = useState(false) // depsues de tocar una ficha incorrecta se lockea el juego por un tiempo
   const [clicks, setClicks] = useState(0)
+  const [errors, setErrors] = useState(0)
   const [gameStatus, setGameStatus] = useState(GAME_STATUS.NOT_STARTED)
   const [qGuessedPairs, setQGuessedPairs] = useState(0)
+  // const prevQGuessedPairs = useRef(0)
   const [hintActive, setHintActive] = useState(false)
   const wasHintActive = useRef(false)
   const [shouldFichasAnimate, setShouldFichasAnimate] = useState(true)
@@ -53,6 +56,7 @@ function Juego() {
 
   useEffect(() => {
     if(qGuessedPairs === totalPairs) setGameStatus(GAME_STATUS.WON)
+    // prevQGuessedPairs++
   }, [qGuessedPairs])
 
   useEffect(() => {
@@ -72,6 +76,15 @@ function Juego() {
     }
   }, [gameStatus])
 
+  useEffect(() => {
+    if (clicks % 2 !== 0) return
+    if (fichas.length === 0) return
+    const qGuessedPairs = fichas.filter(ficha => ficha.status === FICHA_STATUS.ADIVINADA).length / 2
+    const attempts = clicks / 2
+    setErrors(attempts - qGuessedPairs)
+  }, [clicks, fichas]);
+
+
   const sumarClick = () => {
     setClicks(prev => {
       if(prev === 0 && gameStatus === GAME_STATUS.NOT_STARTED) setGameStatus(GAME_STATUS.STARTED)
@@ -89,6 +102,7 @@ function Juego() {
       return next
     })
 
+    setErrors(0)
     setClicks(0)
     setGameStatus(GAME_STATUS.NOT_STARTED)
     setColumns(defineColumns(totalPairs))
@@ -162,8 +176,10 @@ function Juego() {
       <Stats
         totalPairs={totalPairs}
         qGuessedPairs={qGuessedPairs}
+        // prevQGuessedPairs={prevQGuessedPairs}
         clicks={clicks}
         gameStatus={gameStatus}
+        errors={errors}
       />
       <Tablero 
       fichas={fichas}
@@ -173,6 +189,8 @@ function Juego() {
       setIsBoardLocked={setIsBoardLocked}
       sumarClick={sumarClick}
       shouldFichasAnimate={shouldFichasAnimate}
+      setErrors={setErrors}
+      totalPairs={totalPairs}
       />
     </main>
   )

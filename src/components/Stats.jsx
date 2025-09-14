@@ -4,7 +4,7 @@ import { GAME_STATUS, TIMINGS } from './Juego'
 import { getFancyTimeBySecs } from '../libs/myFunctions'
 
 
-function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
+function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus, errors }){
     const [puntos, setPuntos] = useState("...")
     const [secondsInGame, setSeconds] = useState()
     const [timeInGame, setTimeInGame] = useState(0)
@@ -39,6 +39,10 @@ function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
         setTimeInGame(getFancyTimeBySecs(secondsInGame))
     }, [secondsInGame])
 
+    useEffect(() => {
+        
+    }, [qGuessedPairs])
+
     return (
        <section className='stats'>
         { gameStatus === GAME_STATUS.NOT_STARTED ? 
@@ -48,8 +52,9 @@ function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus }){
                 </div>
         :  
             <>
-                <p>Pares encontrados: {qGuessedPairs}/{totalPairs}</p>
                 <p style={{width: '90px'}} >Clicks: {clicks}</p>
+                <p>Pares encontrados: {qGuessedPairs}/{totalPairs}</p>
+                <p style={{width: '205px'}} >Cantidad de errores: {errors}</p>
                 <p style={{width: '150px'}} >Tiempo: {timeInGame}</p>
             </>
         }

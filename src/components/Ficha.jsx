@@ -2,12 +2,13 @@ import { PiSealQuestionBold as HiddenIcon} from "react-icons/pi"
 import { FICHA_STATUS, TIMINGS } from "./Juego"
 import { useEffect, useState } from 'react'
 
-function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate /*, timeToShine*/ }){
+function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate , globalStart , timeToShine }){
     const [showShadow, setShowShadow] = useState(true)
     // const [readyToShine, setReadyToShine] = useState(false)
 
     const { id, name, Icon, color, status, beingHinted } = ficha
     const alphaColor = color.replace('1)', '0.5)')
+    let offset = 0
 
     // useEffect(() => {
     //     if(status === FICHA_STATUS.ADIVINADA){
@@ -25,17 +26,16 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate /*, timeToSh
         }
     }
 
+
     return (
         <div 
             onClick={() => handleClick(id)}
-            //  && timeToShine 
-            className={`ficha ${beingHinted ? 'hinted' : ''} ${status === FICHA_STATUS.ADIVINADA ? 'adivinada' : ''}`}
+            className={`ficha ${beingHinted ? 'hinted' : ''}`}
             style={{
                 '--hint-color': color,
                 cursor: status === FICHA_STATUS.ESCONDIDA && !lockState  ? 'pointer' : 'auto',
                 filter: showShadow ? 'drop-shadow(0px 0px 1px var(--dark))' : 'none',
                 transform: status === FICHA_STATUS.MOSTRADA ? 'scale(1.05)' : 'scale(1)',
-                // animation: status === FICHA_STATUS.ADIVINADA ? 'deScale 0.5s ease-in-out' : ''
             }}
         >
             <div className="ficha-inner"
@@ -57,7 +57,7 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate /*, timeToSh
                         <HiddenIcon color='gray' size='40'></HiddenIcon> 
                     </div>
                 </div>
-                <div className="ficha-front"
+                <div className={`ficha-front ${status === FICHA_STATUS.ADIVINADA && timeToShine ? 'adivinada' : ''}`}
                     style={{
                         borderColor: alphaColor, 
                         backgroundColor: 'var(--lightGray)'
