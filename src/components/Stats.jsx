@@ -54,7 +54,7 @@ function Stats({ totalPairs, qGuessedPairs, clicks, gameStatus, errors }){
             <>
                 <p style={{width: '90px'}} >Clicks: {clicks}</p>
                 <p>Pares encontrados: {qGuessedPairs}/{totalPairs}</p>
-                <p style={{width: '205px'}} >Cantidad de errores: {errors}</p>
+                <p style={{width: '205px'}} >Errores: {errors}</p>
                 <p style={{width: '150px'}} >Tiempo: {timeInGame}</p>
             </>
         }

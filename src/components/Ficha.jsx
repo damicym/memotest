@@ -2,21 +2,19 @@ import { PiSealQuestionBold as HiddenIcon} from "react-icons/pi"
 import { FICHA_STATUS, TIMINGS } from "./Juego"
 import { useEffect, useState } from 'react'
 
-function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate , globalStart , timeToShine }){
+function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine }){
     const [showShadow, setShowShadow] = useState(true)
-    // const [readyToShine, setReadyToShine] = useState(false)
 
     const { id, name, Icon, color, status, beingHinted } = ficha
     const alphaColor = color.replace('1)', '0.5)')
-    let offset = 0
 
-    // useEffect(() => {
-    //     if(status === FICHA_STATUS.ADIVINADA){
-    //         setTimeout(() => {
-    //             setReadyToShine(true)
-    //         }, TIMINGS.BETWEEN_FICHA_SHINE + TIMINGS.SHINE_DURATION)
-    //     }
-    // }, [status])
+    useEffect(() => {
+        if (status === FICHA_STATUS.ESCONDIDA) {
+            setShowShadow(true)
+        } else {
+            setShowShadow(false)
+        }
+    }, [status])
 
     const handleTransitionStart = () => {
         if (status === FICHA_STATUS.ESCONDIDA) {
@@ -25,7 +23,6 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate , globalStar
             setShowShadow(false)
         }
     }
-
 
     return (
         <div 

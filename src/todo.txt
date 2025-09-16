@@ -11,11 +11,10 @@ ver si le poners condiciones para los demas status
 responsive
 - hacer q sea responsive en vertical
 
-
 dejar descargar canvas con stats
 - ¿mostrar preview? seria un poco lo mismo q esta en el section de stats
 - hacerle frame y descargar
 
-¿react router?
+react router: nav horizontal?
 
 ¿cambiarle el nombre al repo?

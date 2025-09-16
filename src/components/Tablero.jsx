@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 
 function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick, shouldFichasAnimate }) {
     const [timeToShine, setTimeToShine] = useState(false)
+    
     useEffect(() => {
         let timeout
         setTimeToShine(true)

@@ -4,6 +4,7 @@ import Opciones from './Opciones'
 import Stats from './Stats'
 import { defineColumns } from '../libs/myFunctions'
 import { inicializarFichas } from '../libs/icons'
+import { fireTest } from '../libs/confetti'
 
 export const FICHA_STATUS = Object.freeze({
   ESCONDIDA: 0,
@@ -23,9 +24,9 @@ export const TIMINGS = Object.freeze({
   FICHA_FLIP: 0.5 * 1000,
   HINT_COOLDOWN: 8 * 1000,
   BETWEEN_ANIMATED_DOTS: 0.6 * 1000,
-  SHINE_DURATION: 2 * 1000,
-  BETWEEN_FICHA_SHINE: 0.2 * 1000,
-  SHINE_CYCLE: 2.2 * 1000
+  SHINE_DURATION: 4 * 1000,
+  BETWEEN_FICHA_SHINE: 0.8 * 1000,
+  SHINE_CYCLE: 4.6 * 1000  // suma de los 2 anteriores
 })
 
 function Juego() {
@@ -42,6 +43,10 @@ function Juego() {
   const [hintActive, setHintActive] = useState(false)
   const wasHintActive = useRef(false)
   const [shouldFichasAnimate, setShouldFichasAnimate] = useState(true)
+
+  useEffect(() => {
+    fireTest()
+  }, [])
 
   useEffect(() => {
     reset("totalPairsChange")
@@ -73,6 +78,9 @@ function Juego() {
       })
       setHintActive(false)
       wasHintActive.current = false
+    }
+    else if(gameStatus === GAME_STATUS.WON){
+      fireTest()
     }
   }, [gameStatus])
 

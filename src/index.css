@@ -9,7 +9,6 @@ html{
 }
 
 body{
-  margin: 0;
   font-family: "Lexend Deca", sans-serif;
   background-color: var(--light);
   /* background-color: #e5e5f7; */
@@ -22,7 +21,9 @@ body{
 
 }
 
-html, body {
+html, body{
+  height: 100%;
+  margin: 0;
   overflow-x: hidden;
 }
 
@@ -56,6 +57,9 @@ html, body {
   align-items: center;
   justify-content: center;
   /* gap: 15px; */
+  width: 100vw;
+  overflow-x: hidden;
+  min-height: 100%;
 }
 
 .opciones, .stats{
@@ -249,8 +253,6 @@ input[type="range"] {
 .ficha-front.adivinada {
   position: relative;
   overflow: hidden;
-  /* transform: scale(1.05); */
-  /* animation: deScale 0.5s ease-in-out */
 }
 
 .ficha-front.adivinada::after {
@@ -269,23 +271,18 @@ input[type="range"] {
     rgba(255, 255, 255, 0) 100%
   );
   transform: skewX(-20deg);
-  animation: shine 2s ease-in-out infinite;
+  animation: shine 4s ease-in-out infinite;
 }
 
 @keyframes shine {
-  0% {
+  0%, 25% {
     opacity: 0;
     left: -150%;
   }
   50% { opacity: 1; }
-  100% {
+  75%, 100% {
     opacity: 0;
     left: 150%;
   }
 }
-
-/* @keyframes deScale {
-  0% { transform: scale(1.05); }
-  0% { transform: scale(1); }
-} */
 
