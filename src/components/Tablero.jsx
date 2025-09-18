@@ -1,10 +1,16 @@
 import Ficha from './Ficha'
 import { FICHA_STATUS, TIMINGS } from './Juego'
 import { useEffect, useState, useRef } from 'react'
+import { toOneShapeNColor } from '../libs/confetti'
 
-function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick, shouldFichasAnimate }) {
+function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick, shouldFichasAnimate, shapesNColors, setShapesNColors }) {
     const [timeToShine, setTimeToShine] = useState(false)
-    
+
+    // const worker = new Worker("worker.js")
+    // worker.onmessage = function (e) {
+    //     setShapesNColors(e.data)
+    // }
+
     useEffect(() => {
         let timeout
         setTimeToShine(true)
@@ -62,6 +68,17 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
             return next
         })
     }
+    // if (!shapesNColors?.length) { 
+    //     const fichasWUniqueIcons = fichas.filter(ficha => !fichas.find(x => x.id > ficha.id && x.pairId === ficha.pairId ))
+    //     console.log(new Date())
+    //     worker.postMessage(fichasWUniqueIcons)
+    //     console.log(new Date())
+    // }
+    // worker.js:
+    // self.onmessage = function (e) {
+    //     const resultado = getShapesNColorsFromFichas(e.data)
+    //     postMessage(resultado);
+    // };
 
     return (
     <section className='tablero' style={{gridTemplateColumns: `repeat(${columns}, minmax(0, min(110px, ${100 / columns}vw)))`}}>

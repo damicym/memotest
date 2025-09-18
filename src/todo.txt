@@ -1,6 +1,9 @@
-pensar q feedbacks voy a poner
+hacer q el worker funcione sin archivo extra, O ir haciendo el parse a medida q se dan vuelta las fichas
 
-feeback de hacer cosas bien o mal (confeti de iconos)
+confetti
+- cuando ganas mostrar todas las shapes
+
+pensar q feedbacks voy a poner
 
 ver si le poners condiciones para los demas status
 - feedbacks

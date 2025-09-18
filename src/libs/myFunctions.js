@@ -1,3 +1,7 @@
+import { getRandomIcon } from "./icons"
+import { FICHA_STATUS } from "../components/Juego"
+import { toOneShapeNColor } from "./confetti"
+
 export function splitCamelCase(str) {
     return str.replace(/([A-Z])/g, ' $1').trim()
 }
@@ -78,4 +82,28 @@ export function getFancyTimeBySecs(initSecs) {
     else if(minutes) facyTime = `${minutes}m ${seconds}s`
     else facyTime = `${seconds}s`
     return facyTime
+}
+
+export function randomInRange(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+export function inicializarFichas(totalPairs) {
+    let auxFichas = []
+    let keyCounter = 0
+    const colorOffset = Math.random() * 360 / totalPairs
+    for (let index = 0; index < totalPairs; index++) {
+        const { Icon, name } = getRandomIcon()
+
+        const colorSection = 360 / totalPairs * index
+        const colorErrorPerc = 360 / totalPairs * index * 5 / 100
+        const colorError = (Math.random() * 2 * colorErrorPerc) - colorErrorPerc
+        const colorHue = colorSection + colorError + colorOffset
+        const colorFinal = `hsla(${colorHue}, 40%, 40%, 1)`
+
+        auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: FICHA_STATUS.ESCONDIDA, beingHinted: false })
+        auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: FICHA_STATUS.ESCONDIDA, beingHinted: false })
+    }
+    auxFichas = shuffle(auxFichas)
+    return auxFichas
 }

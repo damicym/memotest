@@ -2,9 +2,8 @@ import { useEffect, useState, useRef } from 'react'
 import Tablero from './Tablero'
 import Opciones from './Opciones'
 import Stats from './Stats'
-import { defineColumns } from '../libs/myFunctions'
-import { inicializarFichas } from '../libs/icons'
-import { fireTest } from '../libs/confetti'
+import { defineColumns, inicializarFichas } from '../libs/myFunctions'
+import { fireWinDefault } from '../libs/confetti'
 
 export const FICHA_STATUS = Object.freeze({
   ESCONDIDA: 0,
@@ -26,7 +25,8 @@ export const TIMINGS = Object.freeze({
   BETWEEN_ANIMATED_DOTS: 0.6 * 1000,
   SHINE_DURATION: 4 * 1000,
   BETWEEN_FICHA_SHINE: 0.8 * 1000,
-  SHINE_CYCLE: 4.6 * 1000  // suma de los 2 anteriores
+  SHINE_CYCLE: 4.6 * 1000,  // suma de los 2 anteriores
+  BETWEEN_WIN_CONFETTI: 0.2 * 1000,
 })
 
 function Juego() {
@@ -39,17 +39,14 @@ function Juego() {
   const [errors, setErrors] = useState(0)
   const [gameStatus, setGameStatus] = useState(GAME_STATUS.NOT_STARTED)
   const [qGuessedPairs, setQGuessedPairs] = useState(0)
-  // const prevQGuessedPairs = useRef(0)
   const [hintActive, setHintActive] = useState(false)
   const wasHintActive = useRef(false)
   const [shouldFichasAnimate, setShouldFichasAnimate] = useState(true)
-
-  useEffect(() => {
-    fireTest()
-  }, [])
+  const [shapesNColors, setShapesNColors] = useState([])
 
   useEffect(() => {
     reset("totalPairsChange")
+    fireWinDefault()
   }, [totalPairs])
 
   useEffect(() => {
@@ -61,7 +58,6 @@ function Juego() {
 
   useEffect(() => {
     if(qGuessedPairs === totalPairs) setGameStatus(GAME_STATUS.WON)
-    // prevQGuessedPairs++
   }, [qGuessedPairs])
 
   useEffect(() => {
@@ -80,7 +76,7 @@ function Juego() {
       wasHintActive.current = false
     }
     else if(gameStatus === GAME_STATUS.WON){
-      fireTest()
+      fireWinDefault()
     }
   }, [gameStatus])
 
@@ -102,6 +98,7 @@ function Juego() {
 
   // para opciones:
   const reset = (via = "resetBtn") => {
+    setShapesNColors([])
     setIsBoardLocked(true)
     setFichas(prev => {
       let next = prev.map(ficha =>
@@ -184,7 +181,6 @@ function Juego() {
       <Stats
         totalPairs={totalPairs}
         qGuessedPairs={qGuessedPairs}
-        // prevQGuessedPairs={prevQGuessedPairs}
         clicks={clicks}
         gameStatus={gameStatus}
         errors={errors}
@@ -199,6 +195,8 @@ function Juego() {
       shouldFichasAnimate={shouldFichasAnimate}
       setErrors={setErrors}
       totalPairs={totalPairs}
+      setShapesNColors={setShapesNColors}
+      shapesNColors={shapesNColors}
       />
     </main>
   )

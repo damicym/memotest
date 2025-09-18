@@ -1,8 +1,10 @@
 import * as fa6Icons from "react-icons/fa6"
 import * as ciIcons from "react-icons/ci"
 import * as giIcons from "react-icons/gi"
-import { splitCamelCase, deleteExtraWords, shuffle } from "./myFunctions"
-import { FICHA_STATUS } from "../components/Juego"
+import { splitCamelCase, deleteExtraWords } from "./myFunctions"
+import React from "react"
+import ReactDOMServer from "react-dom/server"
+
 
 const arrFa6Icons = Object.entries(fa6Icons).map(([name, Icon]) => ({ name: enhanceName(name), Icon }))
 const arrCiIcons = Object.entries(ciIcons).map(([name, Icon]) => ({ name: enhanceName(name), Icon }))
@@ -25,21 +27,9 @@ export function getRandomIcon() {
     return allIconsWNames[randomIndex]
 }
 
-export function inicializarFichas(totalPairs) {
-    let auxFichas = []
-    let keyCounter = 0
-    const colorOffset = Math.random() * 360 / totalPairs
-    for (let index = 0; index < totalPairs; index++) {
-        const { Icon, name } = getRandomIcon()
-
-        const colorSection = 360 / totalPairs * index
-        const colorErrorPerc = 360 / totalPairs * index * 5 / 100
-        const colorError = (Math.random() * 2 * colorErrorPerc) - colorErrorPerc
-        const colorHue = colorSection + colorError + colorOffset
-        const colorFinal = `hsla(${colorHue}, 40%, 40%, 1)`
-
-        auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: FICHA_STATUS.ESCONDIDA, beingHinted: false })
-        auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: FICHA_STATUS.ESCONDIDA, beingHinted: false })
-    }
-    return shuffle(auxFichas)
+export function getPathFromIcon(IconComponent) {
+  const element = React.createElement(IconComponent)
+  const svgString = ReactDOMServer.renderToStaticMarkup(element)
+  const match = svgString.match(/d="([^"]+)"/)
+  return match ? match[1] : null
 }
