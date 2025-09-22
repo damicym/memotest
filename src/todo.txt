@@ -1,15 +1,7 @@
-hacer q el worker funcione sin archivo extra, O ir haciendo el parse a medida q se dan vuelta las fichas
-
-confetti
-- cuando ganas mostrar todas las shapes
-
-pensar q feedbacks voy a poner
-
-ver si le poners condiciones para los demas status
-- feedbacks
+ver si le poners condiciones para los gameStatus
+- feedbacks (animacion al aparecer boton de canvas)
 - carteles
 - ¿otras cosas?
-
 
 responsive
 - hacer q sea responsive en vertical
@@ -17,6 +9,7 @@ responsive
 dejar descargar canvas con stats
 - ¿mostrar preview? seria un poco lo mismo q esta en el section de stats
 - hacerle frame y descargar
+- certificado por
 
 react router: nav horizontal?
 

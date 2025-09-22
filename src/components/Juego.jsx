@@ -3,7 +3,7 @@ import Tablero from './Tablero'
 import Opciones from './Opciones'
 import Stats from './Stats'
 import { defineColumns, inicializarFichas } from '../libs/myFunctions'
-import { fireWinDefault } from '../libs/confetti'
+import { fireWin } from '../libs/confetti'
 
 export const FICHA_STATUS = Object.freeze({
   ESCONDIDA: 0,
@@ -19,14 +19,14 @@ export const GAME_STATUS = Object.freeze({
 })
 
 export const TIMINGS = Object.freeze({
-  BEFORE_HIDING_FICHA: 1.05 * 1000,
+  BEFORE_HIDING_FICHA: 0.95 * 1000,
   FICHA_FLIP: 0.5 * 1000,
   HINT_COOLDOWN: 8 * 1000,
   BETWEEN_ANIMATED_DOTS: 0.6 * 1000,
   SHINE_DURATION: 4 * 1000,
   BETWEEN_FICHA_SHINE: 0.8 * 1000,
   SHINE_CYCLE: 4.6 * 1000,  // suma de los 2 anteriores
-  BETWEEN_WIN_CONFETTI: 0.2 * 1000,
+  BETWEEN_WIN_CONFETTI: 0.5 * 1000,
 })
 
 function Juego() {
@@ -46,7 +46,6 @@ function Juego() {
 
   useEffect(() => {
     reset("totalPairsChange")
-    fireWinDefault()
   }, [totalPairs])
 
   useEffect(() => {
@@ -66,17 +65,14 @@ function Juego() {
     }
     else if(gameStatus === GAME_STATUS.GIVEN_UP){
       setIsBoardLocked(true)
-      setFichas(prev => {
-        let next = prev.map(ficha =>
-        ({ ...ficha, status: FICHA_STATUS.ADIVINADA })
-        )
-        return next
-      })
+      let next = [...fichas]
+      next.forEach(f => f.status = FICHA_STATUS.ADIVINADA)
+      setFichas(next)
       setHintActive(false)
       wasHintActive.current = false
     }
     else if(gameStatus === GAME_STATUS.WON){
-      fireWinDefault()
+      fireWin()
     }
   }, [gameStatus])
 
@@ -98,14 +94,12 @@ function Juego() {
 
   // para opciones:
   const reset = (via = "resetBtn") => {
-    setShapesNColors([])
+    setShapesNColors(prev => prev.length > 0 ? [] : prev)
     setIsBoardLocked(true)
-    setFichas(prev => {
-      let next = prev.map(ficha =>
-        ({ ...ficha, status: FICHA_STATUS.ESCONDIDA })
-      )
-      return next
-    })
+
+    let next = [...fichas]
+    next.forEach(f => f.status = FICHA_STATUS.ESCONDIDA)
+    setFichas(next)
 
     setErrors(0)
     setClicks(0)
@@ -133,19 +127,16 @@ function Juego() {
   // la primera vez que se toca, durante el juego, cuando se resetea desde el btn
 
   const hint = () => {
-    setFichas(prev => {
-      if (!prev || prev.length === 0) return prev
-      const candidatas = prev.filter(ficha => ficha.status !== FICHA_STATUS.ADIVINADA)
-      if (candidatas.length === 0) return prev
-      setHintActive(true)
-      const elegida = candidatas[Math.floor(Math.random() * candidatas.length)]
-      const pairIdElegido = elegida.pairId
-      
-      const next = prev.map(ficha =>
-        ficha.pairId === pairIdElegido ? { ...ficha, beingHinted: true } : ficha
-      )
-      return next
-    })
+    if (!fichas || fichas.length === 0) return
+    const candidatas = fichas.filter(ficha => ficha.status !== FICHA_STATUS.ADIVINADA)
+    if (candidatas.length === 0) return
+    setHintActive(true)
+    const elegida = candidatas[Math.floor(Math.random() * candidatas.length)]
+    const pairIdElegido = elegida.pairId
+    let next = [...fichas]
+    const elegidas = next.filter(f => f.pairId === pairIdElegido)
+    elegidas.forEach(f => f.beingHinted = true)
+    setFichas(next)
   }
 
   useEffect(() => {
@@ -153,9 +144,11 @@ function Juego() {
     wasHintActive.current = true
     const timer = setTimeout(() => {
       setHintActive(false)
-      setFichas(prev =>
-        prev.map(ficha => ({ ...ficha, beingHinted: false }))
-      )
+
+      let next = [...fichas]
+      next.forEach(f => f.beingHinted = false)
+      setFichas(next)
+      
     }, TIMINGS.HINT_COOLDOWN)
 
     return () => clearTimeout(timer)

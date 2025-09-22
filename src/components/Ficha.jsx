@@ -26,7 +26,7 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine
 
     return (
         <div 
-            onClick={() => handleClick(id)}
+            onClick={(e) => handleClick(e, id)}
             className={`ficha ${beingHinted ? 'hinted' : ''}`}
             style={{
                 '--hint-color': color,

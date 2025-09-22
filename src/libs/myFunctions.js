@@ -1,19 +1,18 @@
 import { getRandomIcon } from "./icons"
 import { FICHA_STATUS } from "../components/Juego"
-import { toOneShapeNColor } from "./confetti"
 
 export function splitCamelCase(str) {
     return str.replace(/([A-Z])/g, ' $1').trim()
 }
 
-export function deleteExtraWords(str, qWords) {
-    const indices = []
-    for (let i = 0; i < str.length; i++) {
-        if (str[i] === " ") {
-            indices.push(i)
-        }
+export function deleteExtraWords(str, qWords, maxChars) {
+    const words = str.split(" ")
+    let auxStr = words.slice(0, qWords).join(" ")
+
+    if (auxStr.length > maxChars) {
+        auxStr = words[0]
     }
-    return str.slice(indices[qWords - 1])
+    return auxStr
 }
 
 export function getReadableRGB() {
@@ -36,6 +35,83 @@ export function getRandomHSL(alpha = 1){
     const hue = Math.floor(Math.random() * 360)
     return `hsla(${hue}, ${generarError(50, 40)}%, ${generarError(40)}%, ${Number(alpha)})`
 }
+
+export function hslaStringToRgba(hslaStr) {
+  // Extraer números con regex
+  const match = hslaStr.match(/hsla?\(\s*([\d.]+),\s*([\d.]+)%?,\s*([\d.]+)%?,?\s*([\d.]*)\s*\)/i)
+  if (!match) {
+    throw new Error("Formato HSLA inválido: " + hslaStr)
+  }
+
+  let h = parseFloat(match[1])
+  let s = parseFloat(match[2])
+  let l = parseFloat(match[3])
+  let a = match[4] === "" ? 1 : parseFloat(match[4])
+
+  // Normalizar porcentajes
+  s /= 100
+  l /= 100
+
+  const c = (1 - Math.abs(2 * l - 1)) * s
+  const hp = h / 60
+  const x = c * (1 - Math.abs((hp % 2) - 1))
+
+  let r = 0, g = 0, b = 0
+
+  if (0 <= hp && hp < 1) [r, g, b] = [c, x, 0]
+  else if (1 <= hp && hp < 2) [r, g, b] = [x, c, 0]
+  else if (2 <= hp && hp < 3) [r, g, b] = [0, c, x]
+  else if (3 <= hp && hp < 4) [r, g, b] = [0, x, c]
+  else if (4 <= hp && hp < 5) [r, g, b] = [x, 0, c]
+  else if (5 <= hp && hp < 6) [r, g, b] = [c, 0, x]
+
+  const m = l - c / 2
+  r = Math.round((r + m) * 255)
+  g = Math.round((g + m) * 255)
+  b = Math.round((b + m) * 255)
+  
+  return `rgb(${r}, ${g}, ${b})`
+}
+
+export function hslaToHex(hslaStr) {
+  // Regex para capturar valores de h, s, l, a
+  const match = hslaStr.match(/hsla?\(\s*([\d.]+),\s*([\d.]+)%?,\s*([\d.]+)%?(?:,\s*([\d.]+))?\s*\)/i)
+  if (!match) {
+    throw new Error("Formato HSLA inválido: " + hslaStr)
+  }
+
+  let h = parseFloat(match[1])
+  let s = parseFloat(match[2]) / 100
+  let l = parseFloat(match[3]) / 100
+  // alpha está en match[4], pero lo ignoramos
+
+  const c = (1 - Math.abs(2 * l - 1)) * s
+  const hp = h / 60
+  const x = c * (1 - Math.abs((hp % 2) - 1))
+
+  let r = 0, g = 0, b = 0
+
+  if (0 <= hp && hp < 1) [r, g, b] = [c, x, 0]
+  else if (1 <= hp && hp < 2) [r, g, b] = [x, c, 0]
+  else if (2 <= hp && hp < 3) [r, g, b] = [0, c, x]
+  else if (3 <= hp && hp < 4) [r, g, b] = [0, x, c]
+  else if (4 <= hp && hp < 5) [r, g, b] = [x, 0, c]
+  else if (5 <= hp && hp < 6) [r, g, b] = [c, 0, x]
+
+  const m = l - c / 2
+  r = Math.round((r + m) * 255)
+  g = Math.round((g + m) * 255)
+  b = Math.round((b + m) * 255)
+
+  // Convertir a hex con padding
+  const toHex = (val) => val.toString(16).padStart(2, "0").toUpperCase()
+  let color = `#${toHex(r)}${toHex(g)}${toHex(b)}`
+  if (color?.length!=7) {
+    console.log("Revisar color:" + color)
+  }
+  return color
+}
+
 export function shuffle(array) {
     let arr = [...array]
     for (let i = arr.length - 1; i > 0; i--) {
@@ -88,9 +164,10 @@ export function randomInRange(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-export function inicializarFichas(totalPairs) {
+export function inicializarFichas(totalPairs, suffle = true) {
     let auxFichas = []
     let keyCounter = 0
+
     const colorOffset = Math.random() * 360 / totalPairs
     for (let index = 0; index < totalPairs; index++) {
         const { Icon, name } = getRandomIcon()
@@ -98,12 +175,15 @@ export function inicializarFichas(totalPairs) {
         const colorSection = 360 / totalPairs * index
         const colorErrorPerc = 360 / totalPairs * index * 5 / 100
         const colorError = (Math.random() * 2 * colorErrorPerc) - colorErrorPerc
-        const colorHue = colorSection + colorError + colorOffset
+        const colorHue = Math.min(359, (colorSection + colorError + colorOffset))
         const colorFinal = `hsla(${colorHue}, 40%, 40%, 1)`
 
         auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: FICHA_STATUS.ESCONDIDA, beingHinted: false })
         auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: FICHA_STATUS.ESCONDIDA, beingHinted: false })
     }
-    auxFichas = shuffle(auxFichas)
+    if (suffle) {
+        auxFichas = shuffle(auxFichas)
+    }    
     return auxFichas
 }
+

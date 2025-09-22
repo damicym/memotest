@@ -1,5 +1,5 @@
 import confetti from 'canvas-confetti'
-import { randomInRange } from './myFunctions'
+import { randomInRange, hslaToHex } from './myFunctions'
 import { getPathFromIcon } from './icons'
 import { TIMINGS } from '../components/Juego'
 
@@ -72,46 +72,103 @@ export async function toShapesNColors(fichas, callback){
 // #endregion multipleIcons
 
 // #region oneIcon
-const oneIconFireParams = { //cambiar
-  scalar: 4,
-  spread: 180,
+const oneIconFireParams = {
+  scalar: 4.5,
+  spread: 45,
   decay: 0.9,
-  particleCount: 10,
-  origin: { y: 0/* , x: 0 */},
-  startVelocity: -35,
-  ticks: 80
+  particleCount: 3,
+  startVelocity: -20,
+  ticks: 40
 }
 
-export async function toOneShapeNColor(ficha, callback){
+export async function toOneShapeNColor(ficha, prevShapesNColors, callback){
+  if(prevShapesNColors.find(shape => shape.pairId === ficha.pairId)) return
   const shapeFromIcon = confetti.shapeFromPath({
     path: getPathFromIcon(ficha.Icon),
   })
-  let shapeNColor = { shape: shapeFromIcon, color: ficha.color }
+  let shapeNColor = { pairId: ficha.pairId, shape: shapeFromIcon, color: hslaToHex(ficha.color) }
   if (typeof callback === 'function') {
-    callback(prev => prev.push(shapeNColor))
+    callback(prev => [...prev, shapeNColor])
   }
 }
 
-export function fireIcon(shapeNColor){
-  if(!shapeNColor) return
+export function fireIcon(shapeNColor, posY, posX, totalY, totalX){
+  if(!shapeNColor) {
+    console.log('undefined')
+    return
+  }
+  const yOrigin = posY / totalY // de 0 a 1 en base a la pantalla
+  const xOrigin = posX / totalX // de 0 a 1 en base a la pantalla
   confetti({
-    ...oneIconFireParams
+    ...oneIconFireParams,
+    origin: {y: yOrigin, x: xOrigin},
+    shapes: [shapeNColor.shape],
+    colors: [shapeNColor.color],
+    angle: 45
+  })
+  confetti({
+    ...oneIconFireParams,
+    origin: {y: yOrigin, x: xOrigin},
+    shapes: [shapeNColor.shape],
+    colors: [shapeNColor.color],
+    angle: 90
+  })
+  confetti({
+    ...oneIconFireParams,
+    origin: {y: yOrigin, x: xOrigin},
+    shapes: [shapeNColor.shape],
+    colors: [shapeNColor.color],
+    angle: 135
+  })
+  confetti({
+    ...oneIconFireParams,
+    origin: {y: yOrigin, x: xOrigin},
+    shapes: [shapeNColor.shape],
+    colors: [shapeNColor.color],
+    angle: 180
+  })
+  confetti({
+    ...oneIconFireParams,
+    origin: {y: yOrigin, x: xOrigin},
+    shapes: [shapeNColor.shape],
+    colors: [shapeNColor.color],
+    angle: 225
+  })
+  confetti({
+    ...oneIconFireParams,
+    origin: {y: yOrigin, x: xOrigin},
+    shapes: [shapeNColor.shape],
+    colors: [shapeNColor.color],
+    angle: 270
+  })
+  confetti({
+    ...oneIconFireParams,
+    origin: {y: yOrigin, x: xOrigin},
+    shapes: [shapeNColor.shape],
+    colors: [shapeNColor.color],
+    angle: 315
+  })
+  confetti({
+    ...oneIconFireParams,
+    origin: {y: yOrigin, x: xOrigin},
+    shapes: [shapeNColor.shape],
+    colors: [shapeNColor.color],
+    angle: 360
   })
 }
 // #endregion oneIcon
 
 // #region win
-const winFiresQ = 5
-let countWinFiresQ = 0
-
+const winFiresQ = 3
 const winFireParams = {
   scalar: 1.8,
   spread: 160,
-  particleCount: 100,
+  particleCount: 300,
   gravity: 0.7,
 }
 
-export async function fireWinDefault(){
+export async function fireWin(){
+  let countWinFiresQ = 0
   confetti({
     ...winFireParams,
     angle: randomInRange(170, 190),
@@ -126,7 +183,7 @@ export async function fireWinDefault(){
     startVelocity: randomInRange(-25, -35),
     origin: { x: 1, y: 0 },
   })
-  
+  countWinFiresQ++
   const winFireInterval = setInterval(() => {
     confetti({
       ...winFireParams,
