@@ -3,7 +3,7 @@ import { FICHA_STATUS, TIMINGS } from './Juego'
 import { useEffect, useState } from 'react'
 import { toOneShapeNColor, fireIcon } from '../libs/confetti'
 
-function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick, shouldFichasAnimate, shapesNColors, setShapesNColors }) {
+function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick, shouldFichasAnimate, totalPairs, shapesNColors, setShapesNColors }) {
     const [timeToShine, setTimeToShine] = useState(false)
 
     useEffect(() => {
@@ -70,7 +70,11 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
     }
 
     return (
-    <section className='tablero' style={{gridTemplateColumns: `repeat(${columns}, minmax(0, min(110px, ${100 / columns}vw)))`}}>
+    <section className='tablero' 
+        style={{
+            gridTemplateColumns: `repeat(${columns}, minmax(0, min(110px, ${100 / columns}vw)))`
+        }}
+    >
         {
             fichas?.map((ficha, index) => (
                 <Ficha 

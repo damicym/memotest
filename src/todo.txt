@@ -1,12 +1,8 @@
-ver si le poners condiciones para los gameStatus
-- feedbacks (animacion al aparecer boton de canvas)
-- carteles
-- ¿otras cosas?
-
 responsive
 - hacer q sea responsive en vertical
 
 dejar descargar canvas con stats
+- q se haga efecto para q se note cuando aparece
 - ¿mostrar preview? seria un poco lo mismo q esta en el section de stats
 - hacerle frame y descargar
 - certificado por

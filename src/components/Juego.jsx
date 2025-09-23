@@ -79,9 +79,10 @@ function Juego() {
   useEffect(() => {
     if (clicks % 2 !== 0) return
     if (fichas.length === 0) return
+    if(gameStatus === GAME_STATUS.GIVEN_UP) return
     const qGuessedPairs = fichas.filter(ficha => ficha.status === FICHA_STATUS.ADIVINADA).length / 2
     const attempts = clicks / 2
-    setErrors(attempts - qGuessedPairs)
+    setErrors(Math.max(0, attempts - qGuessedPairs))
   }, [clicks, fichas]);
 
 
@@ -186,7 +187,6 @@ function Juego() {
       setIsBoardLocked={setIsBoardLocked}
       sumarClick={sumarClick}
       shouldFichasAnimate={shouldFichasAnimate}
-      setErrors={setErrors}
       totalPairs={totalPairs}
       setShapesNColors={setShapesNColors}
       shapesNColors={shapesNColors}
