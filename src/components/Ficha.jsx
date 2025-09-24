@@ -30,6 +30,7 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine
             className={`ficha ${beingHinted ? 'hinted' : ''}`}
             style={{
                 '--hint-color': color,
+                transition: 'all 0.4s',
                 cursor: status === FICHA_STATUS.ESCONDIDA && !lockState  ? 'pointer' : 'auto',
                 filter: showShadow ? 'drop-shadow(0px 0px 1px var(--dark))' : 'none',
                 transform: status === FICHA_STATUS.MOSTRADA ? 'scale(1.05)' : 'scale(1)',

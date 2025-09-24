@@ -21,13 +21,19 @@ export const GAME_STATUS = Object.freeze({
 export const TIMINGS = Object.freeze({
   BEFORE_HIDING_FICHA: 0.95 * 1000,
   FICHA_FLIP: 0.5 * 1000,
-  HINT_COOLDOWN: 8 * 1000,
+  HINT_COOLDOWN: 6 * 1000,
   BETWEEN_ANIMATED_DOTS: 0.6 * 1000,
   SHINE_DURATION: 4 * 1000,
   BETWEEN_FICHA_SHINE: 0.8 * 1000,
   SHINE_CYCLE: 4.6 * 1000,  // suma de los 2 anteriores
   BETWEEN_WIN_CONFETTI: 0.5 * 1000,
 })
+
+export const GAME_RULES = Object.freeze({
+  MAX_HINTS: 3,
+  EXCLUDED_Q_PAIRS: [34, 38, 46]
+})
+
 
 function Juego() {
   const [totalPairs, setTotalPairs] = useState(10)
@@ -43,6 +49,7 @@ function Juego() {
   const wasHintActive = useRef(false)
   const [shouldFichasAnimate, setShouldFichasAnimate] = useState(true)
   const [shapesNColors, setShapesNColors] = useState([])
+  const [usedHints, setUsedHints] = useState(0)
 
   useEffect(() => {
     reset("totalPairsChange")
@@ -102,6 +109,7 @@ function Juego() {
     next.forEach(f => f.status = FICHA_STATUS.ESCONDIDA)
     setFichas(next)
 
+    setUsedHints(0)
     setErrors(0)
     setClicks(0)
     setGameStatus(GAME_STATUS.NOT_STARTED)
@@ -131,6 +139,8 @@ function Juego() {
     if (!fichas || fichas.length === 0) return
     const candidatas = fichas.filter(ficha => ficha.status !== FICHA_STATUS.ADIVINADA)
     if (candidatas.length === 0) return
+    if (usedHints >= GAME_RULES.MAX_HINTS) return
+    setUsedHints(prev => prev + 1)
     setHintActive(true)
     const elegida = candidatas[Math.floor(Math.random() * candidatas.length)]
     const pairIdElegido = elegida.pairId
@@ -171,6 +181,7 @@ function Juego() {
         gameStatus={gameStatus}
         hintActive={hintActive}
         wasHintActive={wasHintActive}
+        usedHints={usedHints}
       />
       <Stats
         totalPairs={totalPairs}
