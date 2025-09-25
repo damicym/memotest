@@ -54,8 +54,8 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
         :  
             <>
                 <section className='statsInfo'>
-                    <p style={{width: '100px', textAlign: 'right', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.45' : '1'}} >Errores: {errors}</p>
-                    <div id="customProgressBar" style={{ position: 'relative', width: '250px', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.45' : '1' }}>
+                    <p style={{width: '100px', textAlign: 'right', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.4' : '1'}} >Errores: {errors}</p>
+                    <div id="customProgressBar" style={{ position: 'relative', width: '250px', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.4' : '1' }}>
                         <ProgressBar
                             striped={gameStatus === GAME_STATUS.GIVEN_UP}
                             animated={gameStatus !== GAME_STATUS.GIVEN_UP}
@@ -89,7 +89,7 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                             {`${Math.floor((qGuessedPairs / totalPairs) * 100)}%`}
                         </div>
                     </div>
-                    <p style={{ width: '85px', textAlign: 'left', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.45' : '1'}} >{timeInGame}</p>
+                    <p style={{ width: '85px', textAlign: 'left', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.4' : '1'}} >{timeInGame}</p>
                     { gameStatus === GAME_STATUS.GIVEN_UP ?
                         <p className='givenUpText' >¡Te rendiste!</p> :<></>
                     }
