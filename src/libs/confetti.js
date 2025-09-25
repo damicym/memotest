@@ -73,7 +73,7 @@ export async function toShapesNColors(fichas, callback){
 
 // #region oneIcon
 const oneIconFireParams = {
-  scalar: 4.5,
+  scalar: 5,
   spread: 45,
   decay: 0.9,
   particleCount: 3,

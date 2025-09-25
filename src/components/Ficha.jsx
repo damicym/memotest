@@ -27,20 +27,20 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine
     return (
         <div 
             onClick={(e) => handleClick(e, id)}
-            className={`ficha ${beingHinted ? 'hinted' : ''}`}
+            className={`ficha ${beingHinted ? 'hinted' : ''} ${status === FICHA_STATUS.ERROR ? 'error' : ''}`}
             style={{
                 '--hint-color': color,
                 transition: 'all 0.4s',
                 cursor: status === FICHA_STATUS.ESCONDIDA && !lockState  ? 'pointer' : 'auto',
                 filter: showShadow ? 'drop-shadow(0px 0px 1px var(--dark))' : 'none',
-                transform: status === FICHA_STATUS.MOSTRADA ? 'scale(1.05)' : 'scale(1)',
+                transform: status === FICHA_STATUS.MOSTRADA || status === FICHA_STATUS.ERROR ? 'scale(1.05)' : 'scale(1)',
             }}
         >
             <div className="ficha-inner"
                 onTransitionStart={handleTransitionStart}
                 style={{
                     transition: shouldFichasAnimate ? 'transform 0.5s ease' : 'none',
-                    ...(status === FICHA_STATUS.MOSTRADA || status === FICHA_STATUS.ADIVINADA) && shouldFichasAnimate
+                    ...(status === FICHA_STATUS.MOSTRADA || status === FICHA_STATUS.ERROR || status === FICHA_STATUS.ADIVINADA ) && shouldFichasAnimate
                     ? { transform: 'rotateY(180deg)' } 
                     : { transform: 'none' }
                 }}

@@ -6,6 +6,7 @@ import { defineColumns, inicializarFichas } from '../libs/myFunctions'
 import { fireWin } from '../libs/confetti'
 
 export const FICHA_STATUS = Object.freeze({
+  ERROR: -1,
   ESCONDIDA: 0,
   MOSTRADA: 1,
   ADIVINADA: 2
@@ -33,7 +34,6 @@ export const GAME_RULES = Object.freeze({
   MAX_HINTS: 3,
   EXCLUDED_Q_PAIRS: [34, 38, 46]
 })
-
 
 function Juego() {
   const [totalPairs, setTotalPairs] = useState(10)
@@ -175,6 +175,11 @@ function Juego() {
         totalPairs={totalPairs} 
         setTotalPairs={setTotalPairs} 
         prevValuePairs={prevValuePairs}
+      />
+      <Stats
+        totalPairs={totalPairs}
+        qGuessedPairs={qGuessedPairs}
+        errors={errors}
         reset={reset} 
         hint={hint}
         giveUp={giveUp}
@@ -183,25 +188,19 @@ function Juego() {
         wasHintActive={wasHintActive}
         usedHints={usedHints}
       />
-      <Stats
-        totalPairs={totalPairs}
-        qGuessedPairs={qGuessedPairs}
-        clicks={clicks}
-        gameStatus={gameStatus}
-        errors={errors}
-      />
-      <Tablero 
-      fichas={fichas}
-      setFichas={setFichas}
-      columns={columns}
-      isBoardLocked={isBoardLocked}
-      setIsBoardLocked={setIsBoardLocked}
-      sumarClick={sumarClick}
-      shouldFichasAnimate={shouldFichasAnimate}
-      totalPairs={totalPairs}
-      setShapesNColors={setShapesNColors}
-      shapesNColors={shapesNColors}
-      />
+      <div className='tableroContainer'>
+        <Tablero 
+          fichas={fichas}
+          setFichas={setFichas}
+          columns={columns}
+          isBoardLocked={isBoardLocked}
+          setIsBoardLocked={setIsBoardLocked}
+          sumarClick={sumarClick}
+          shouldFichasAnimate={shouldFichasAnimate}
+          shapesNColors={shapesNColors}
+          setShapesNColors={setShapesNColors}
+        />
+      </div>
     </main>
   )
 }

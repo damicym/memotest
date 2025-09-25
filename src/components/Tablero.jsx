@@ -3,7 +3,7 @@ import { FICHA_STATUS, TIMINGS } from './Juego'
 import { useEffect, useState } from 'react'
 import { toOneShapeNColor, fireIcon } from '../libs/confetti'
 
-function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick, shouldFichasAnimate, totalPairs, shapesNColors, setShapesNColors }) {
+function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick, shouldFichasAnimate, shapesNColors, setShapesNColors }) {
     const [timeToShine, setTimeToShine] = useState(false)
 
     useEffect(() => {
@@ -25,8 +25,12 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
     }, [])
 
     const esconderDsps = (a, b) => { // a y b son fichas
+        setIsBoardLocked(true)
+        let next = [...fichas]
+        a.status = FICHA_STATUS.ERROR
+        b.status = FICHA_STATUS.ERROR
+        setFichas(next)
         setTimeout(() => {
-            let next = [...fichas]
             a.status = FICHA_STATUS.ESCONDIDA
             b.status = FICHA_STATUS.ESCONDIDA
             setFichas(next)
@@ -62,7 +66,6 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
                 let shape = shapesNColors.find(s => s.pairId === fichaActual.pairId)
                 fireIcon(shape, e.clientY, e.clientX, window.innerHeight, window.innerWidth)
             } else {
-                setIsBoardLocked(true)
                 esconderDsps(a, b)
             }
         } else toOneShapeNColor(fichaActual, shapesNColors, setShapesNColors)
