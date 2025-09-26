@@ -226,6 +226,7 @@ html, body{
 
 .customTooltip {
   --bs-tooltip-opacity: 1 !important;
+  position: fixed !important;
 }
 .customTooltip .tooltip-inner{
   background-color: var(--dark);
