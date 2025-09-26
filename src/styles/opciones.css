@@ -1,0 +1,58 @@
+.opciones, .stats{
+  /* flex: 0 0 auto; */
+  position: relative; /* importante */
+  box-sizing: border-box;
+  user-select: none;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.opciones{
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--main);
+  /* height: 80px; */
+  /* min-height: 80px; */
+  gap: 12px;
+  justify-content: center;
+}
+
+.title{
+  display: grid;
+  position: relative;
+}
+
+.title svg{
+  grid-column: 2;
+  color: var(--dark);
+  position: absolute;
+  margin-left: 1px;
+}
+
+.opciones h1{
+  color: var(--accent);
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+.campo{
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+}
+.campo label{
+  position: absolute;
+  transform: translateX(-105%);
+  font-size: 1.05rem;
+  color: var(--accent);
+  font-weight: 550;
+}
+
+input[type="range"] {
+  accent-color: var(--accent);
+  width: 150px;
+  margin: 0;
+}
