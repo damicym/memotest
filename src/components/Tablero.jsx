@@ -1,9 +1,9 @@
 import Ficha from './Ficha'
-import { FICHA_STATUS, TIMINGS } from './Juego'
+import { FICHA_STATUS, GAME_STATUS, TIMINGS } from './Juego'
 import { useEffect, useState } from 'react'
 import { toOneShapeNColor, fireIcon } from '../libs/confetti'
 
-function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick, shouldFichasAnimate, shapesNColors, setShapesNColors }) {
+function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, sumarClick, shouldFichasAnimate, shapesNColors, setShapesNColors, gameStatus, gameStatusRef }) {
     const [timeToShine, setTimeToShine] = useState(false)
 
     useEffect(() => {
@@ -31,8 +31,9 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
         b.status = FICHA_STATUS.ERROR
         setFichas(next)
         setTimeout(() => {
-            a.status = FICHA_STATUS.ESCONDIDA
-            b.status = FICHA_STATUS.ESCONDIDA
+            a.status = gameStatusRef.current === GAME_STATUS.GIVEN_UP ? FICHA_STATUS.ADIVINADA : FICHA_STATUS.ESCONDIDA
+            b.status = gameStatusRef.current === GAME_STATUS.GIVEN_UP ? FICHA_STATUS.ADIVINADA : FICHA_STATUS.ESCONDIDA
+            
             setFichas(next)
             setIsBoardLocked(false)
         }, TIMINGS.BEFORE_HIDING_FICHA)

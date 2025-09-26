@@ -47,10 +47,10 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
     return (
        <section className='stats' style={{ display: gameStatus === GAME_STATUS.NOT_STARTED ? 'flex' : 'grid'}}>
         { gameStatus === GAME_STATUS.NOT_STARTED ? 
-                <div className='waiting'>
-                    <p>Esperando a que empieces a jugar para mostrar estadísticas</p>
-                    <p>{puntos}</p>
-                </div>
+            <div className='waiting'>
+                <p>Esperando a que empieces a jugar para mostrar estadísticas</p>
+                <p>{puntos}</p>
+            </div>
         :  
             <>
                 <section className='statsInfo'>
@@ -89,7 +89,10 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                             {`${Math.floor((qGuessedPairs / totalPairs) * 100)}%`}
                         </div>
                     </div>
-                    <p style={{ width: '85px', textAlign: 'left', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.4' : '1'}} >{timeInGame}</p>
+                    <p style={{ width: '85px', textAlign: 'left', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.4' : '1'}} 
+                    >
+                        {timeInGame}
+                    </p>
                     { gameStatus === GAME_STATUS.GIVEN_UP ?
                         <p className='givenUpText' >¡Te rendiste!</p> :<></>
                     }

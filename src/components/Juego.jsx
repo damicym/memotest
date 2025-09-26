@@ -22,7 +22,8 @@ export const GAME_STATUS = Object.freeze({
 export const TIMINGS = Object.freeze({
   BEFORE_HIDING_FICHA: 0.95 * 1000,
   FICHA_FLIP: 0.5 * 1000,
-  HINT_COOLDOWN: 6 * 1000,
+  HINT_COOLDOWN: 2 * 1000,
+  HINT_DURATION: 1.6 * 1000,
   BETWEEN_ANIMATED_DOTS: 0.6 * 1000,
   SHINE_DURATION: 4 * 1000,
   BETWEEN_FICHA_SHINE: 0.8 * 1000,
@@ -44,6 +45,7 @@ function Juego() {
   const [clicks, setClicks] = useState(0)
   const [errors, setErrors] = useState(0)
   const [gameStatus, setGameStatus] = useState(GAME_STATUS.NOT_STARTED)
+  const gameStatusRef = useRef(gameStatus)
   const [qGuessedPairs, setQGuessedPairs] = useState(0)
   const [hintActive, setHintActive] = useState(false)
   const wasHintActive = useRef(false)
@@ -67,13 +69,17 @@ function Juego() {
   }, [qGuessedPairs])
 
   useEffect(() => {
+    gameStatusRef.current = gameStatus
     if(gameStatus === GAME_STATUS.STARTED){
       setShouldFichasAnimate(true)
     }
     else if(gameStatus === GAME_STATUS.GIVEN_UP){
       setIsBoardLocked(true)
       let next = [...fichas]
-      next.forEach(f => f.status = FICHA_STATUS.ADIVINADA)
+      next.forEach(f => {
+        f.status = FICHA_STATUS.ADIVINADA
+        f.beingHinted = false
+      })
       setFichas(next)
       setHintActive(false)
       wasHintActive.current = false
@@ -140,10 +146,13 @@ function Juego() {
     const candidatas = fichas.filter(ficha => ficha.status !== FICHA_STATUS.ADIVINADA)
     if (candidatas.length === 0) return
     if (usedHints >= GAME_RULES.MAX_HINTS) return
+
     setUsedHints(prev => prev + 1)
     setHintActive(true)
+
     const elegida = candidatas[Math.floor(Math.random() * candidatas.length)]
     const pairIdElegido = elegida.pairId
+    
     let next = [...fichas]
     const elegidas = next.filter(f => f.pairId === pairIdElegido)
     elegidas.forEach(f => f.beingHinted = true)
@@ -153,16 +162,21 @@ function Juego() {
   useEffect(() => {
     if (!hintActive) return
     wasHintActive.current = true
-    const timer = setTimeout(() => {
-      setHintActive(false)
 
+    const updateHintActiveTimer = setTimeout(() => { 
+      setHintActive(false) 
+    }, TIMINGS.HINT_COOLDOWN)
+
+    const removeClassTimer = setTimeout(() => {
       let next = [...fichas]
       next.forEach(f => f.beingHinted = false)
       setFichas(next)
-      
-    }, TIMINGS.HINT_COOLDOWN)
+    }, TIMINGS.HINT_DURATION)
 
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(removeClassTimer)
+      clearTimeout(updateHintActiveTimer)
+    }
   }, [hintActive])
 
   const giveUp = () => {
@@ -199,6 +213,8 @@ function Juego() {
           shouldFichasAnimate={shouldFichasAnimate}
           shapesNColors={shapesNColors}
           setShapesNColors={setShapesNColors}
+          gameStatus={gameStatus}
+          gameStatusRef={gameStatusRef}
         />
       </div>
     </main>
