@@ -16,7 +16,7 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine
         }
     }, [status])
 
-    const handleTransitionStart = () => {
+    const handleInnerTransitionStart = () => {
         if (status === FICHA_STATUS.ESCONDIDA) {
             setShowShadow(true)
         } else {
@@ -24,10 +24,17 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine
         }
     }
 
+    const getAnimationClass = () => {
+        if (beingHinted && status === FICHA_STATUS.ERROR) return 'hinted-and-error'
+        if (beingHinted) return 'hinted'
+        if (status === FICHA_STATUS.ERROR) return 'error'
+        return ''
+    }
+
     return (
         <div 
             onClick={(e) => handleClick(e, id)}
-            className={`ficha ${beingHinted ? 'hinted' : ''} ${status === FICHA_STATUS.ERROR ? 'error' : ''}`}
+            className={`ficha ${getAnimationClass()}`}
             style={{
                 '--hint-color': color,
                 transition: 'all 0.4s',
@@ -37,7 +44,7 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine
             }}
         >
             <div className="ficha-inner"
-                onTransitionStart={handleTransitionStart}
+                onTransitionStart={handleInnerTransitionStart}
                 style={{
                     transition: shouldFichasAnimate ? 'transform 0.5s ease' : 'none',
                     ...(status === FICHA_STATUS.MOSTRADA || status === FICHA_STATUS.ERROR || status === FICHA_STATUS.ADIVINADA ) && shouldFichasAnimate

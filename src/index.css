@@ -131,21 +131,36 @@ html, body{
   position: absolute;
   align-items: center;
   justify-content: center;
+  /* justify-self: end; */
+  margin-left: 10px;
 }
 
 .statsInfo{
   grid-column: 2;
-  display: flex;
+  grid-template-columns: 1fr auto 1fr;
+  display: grid;
   flex: 1;
   gap: 15px;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.statsInfo .customProgressBar{
+  grid-column: 2;
+}
+.statsInfo .timer{
+  grid-column: 1 !important;
+  /* position: absolute; */
+  background: rgba(240, 244, 239, 0.2); /* var light en RGB */
+  border-radius: 7px;
+  padding: 1px;
 }
 
 .stats{
   padding: 0 !important;
-  gap: 10px;
-  grid-template-columns: 1fr auto 1fr;
+  gap: 15px;
+  /* grid-template-columns: 1fr auto 1fr; */
   min-height: 55px;
   height: 55px;
   color: var(--lightGray);
@@ -166,12 +181,13 @@ html, body{
 .stats .givenUpText{
   opacity: 1;
   font-weight: 600;
-  font-size: 2rem;
+  font-size: 2.1rem;
   margin: 0;
   padding: 0;
   position: absolute;
   color: var(--alert);
-  transform: rotate(-2deg);
+  transform: rotate(-3deg);
+  justify-self: center;
 }
 
 .waiting{
@@ -260,7 +276,7 @@ button.control{
   width: 0%;
   height: calc(100%);
   background-color: color-mix(in srgb, var(--accent), transparent 50%);
-  animation: agrandar0a100 6s linear;
+  animation: agrandar0a100 2s linear;
 }
 
 .bounce{
@@ -294,19 +310,6 @@ input[type="range"] {
   accent-color: var(--accent);
   width: 150px;
   margin: 0;
-}
-
-.ficha.hinted {
-  animation: hintFicha 1.6s ease-in-out;
-}
-
-@keyframes hintFicha {
-  0%, 100% {
-    filter: drop-shadow(0px 0px 1px var(--dark));
-  }
-  50% {
-    filter: drop-shadow(0px 0px 16px var(--hint-color));
-  }
 }
 
 .tablero{
@@ -405,13 +408,26 @@ input[type="range"] {
   }
 }
 
-.success{
+/* .success{
   animation: twinkleSuccess 1s steps(1);
 }
 
 @keyframes twinkleSuccess {
   0%, 50% { color: var(--success); }
   25%, 75% { color: var(--light); }
+} */
+
+.ficha.hinted {
+  animation: hintFicha 1.6s ease-in-out;
+}
+
+@keyframes hintFicha {
+  0%, 100% {
+    filter: drop-shadow(0px 0px 1px var(--dark));
+  }
+  50% {
+    filter: drop-shadow(0px 0px 18px var(--hint-color));
+  }
 }
 
 @keyframes shake {
@@ -424,6 +440,11 @@ input[type="range"] {
 }
 
 .ficha.error {
-  animation: shake 0.4s ease;
-  animation-delay: 0.45s;
+  animation: shake 0.4s ease 0.45s;
+}
+
+.ficha.hinted-and-error {
+  animation: 
+    hintFicha 1.6s ease-in-out,
+    shake 0.4s ease 0.45s;
 }

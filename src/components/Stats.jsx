@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useEffect } from 'react'
 import { GAME_STATUS, GAME_RULES, TIMINGS } from "./Juego"
 import { getFancyTimeBySecs } from '../libs/myFunctions'
@@ -54,8 +54,8 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
         :  
             <>
                 <section className='statsInfo'>
-                    <p style={{width: '100px', textAlign: 'right', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.4' : '1'}} >Errores: {errors}</p>
-                    <div id="customProgressBar" style={{ position: 'relative', width: '250px', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.4' : '1' }}>
+                    <p className="timer" style={{ width: '85px', textAlign: 'center', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.4' : '1'}} >{timeInGame}</p>
+                    <div className="customProgressBar" style={{ position: 'relative', width: '250px', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.4' : '1' }}>
                         <ProgressBar
                             striped={gameStatus === GAME_STATUS.GIVEN_UP}
                             animated={gameStatus !== GAME_STATUS.GIVEN_UP}
@@ -89,42 +89,11 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                             {`${Math.floor((qGuessedPairs / totalPairs) * 100)}%`}
                         </div>
                     </div>
-                    <p style={{ width: '85px', textAlign: 'left', opacity: gameStatus === GAME_STATUS.GIVEN_UP ? '0.4' : '1'}} 
-                    >
-                        {timeInGame}
-                    </p>
                     { gameStatus === GAME_STATUS.GIVEN_UP ?
                         <p className='givenUpText' >¡Te rendiste!</p> :<></>
                     }
-                </section>
-                <section className='controlsContainer'>
-                { gameStatus !== GAME_STATUS.STARTED || hintActive || usedHints >= GAME_RULES.MAX_HINTS ?
-                    <div className="hintBtnContainer">
-                        <button 
-                            className={`control ${hintActive && usedHints !== GAME_RULES.MAX_HINTS ? 'loadingHint' : wasHintActive.current && usedHints !== GAME_RULES.MAX_HINTS ? 'bounce' : ''}`} 
-                            onClick={hint} 
-                            disabled={gameStatus !== GAME_STATUS.STARTED || hintActive || usedHints >= GAME_RULES.MAX_HINTS} 
-                        >
-                            <HintIcon />
-                        </button>
-                        { usedHints !== GAME_RULES.MAX_HINTS && gameStatus === GAME_STATUS.STARTED ?
-                            // <p>{GAME_RULES.MAX_HINTS - usedHints}</p> :<></>
-                            <span 
-                                style={{pointerEvents: gameStatus !== GAME_STATUS.STARTED || hintActive || usedHints >= GAME_RULES.MAX_HINTS ? 'none' : 'auto'}}
-                                onClick={hint}
-                                className="hintBadge">{GAME_RULES.MAX_HINTS - usedHints}
-                            </span> :<></>
-                        }
-                    </div>
-                    : 
-                    <OverlayTrigger
-                        delay={{ show: 700, hide: 0 }}
-                        key='hintOverlay'
-                        placement='top'
-                        overlay={
-                            <Tooltip className="customTooltip" id='tooltip-top'>Usar una pista</Tooltip>
-                        }
-                    >
+                    <section className='controlsContainer'>
+                    { gameStatus !== GAME_STATUS.STARTED || hintActive || usedHints >= GAME_RULES.MAX_HINTS ?
                         <div className="hintBtnContainer">
                             <button 
                                 className={`control ${hintActive && usedHints !== GAME_RULES.MAX_HINTS ? 'loadingHint' : wasHintActive.current && usedHints !== GAME_RULES.MAX_HINTS ? 'bounce' : ''}`} 
@@ -134,7 +103,6 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                                 <HintIcon />
                             </button>
                             { usedHints !== GAME_RULES.MAX_HINTS && gameStatus === GAME_STATUS.STARTED ?
-                                // <p>{GAME_RULES.MAX_HINTS - usedHints}</p> :<></>
                                 <span 
                                     style={{pointerEvents: gameStatus !== GAME_STATUS.STARTED || hintActive || usedHints >= GAME_RULES.MAX_HINTS ? 'none' : 'auto'}}
                                     onClick={hint}
@@ -142,25 +110,35 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                                 </span> :<></>
                             }
                         </div>
-                    </OverlayTrigger>
-                }
-                { gameStatus !== GAME_STATUS.STARTED ?
-                    <button 
-                        className="control" 
-                        onClick={giveUp} 
-                        disabled={gameStatus !== GAME_STATUS.STARTED} 
-                    >
-                        <GiveUpIcon />
-                    </button>
-                    :
-                    <OverlayTrigger
-                        delay={{ show: 700, hide: 0 }}
-                        key='giveUpOverlay'
-                        placement='top'
-                        overlay={
-                            <Tooltip className="customTooltip" id='tooltip-top'>Rendirse</Tooltip>
-                        }
-                    >
+                        : 
+                        <OverlayTrigger
+                            delay={{ show: 700, hide: 0 }}
+                            key='hintOverlay'
+                            placement='top'
+                            overlay={
+                                <Tooltip className="customTooltip" id='tooltip-top'>Usar una pista</Tooltip>
+                            }
+                        >
+                            <div className="hintBtnContainer">
+                                <button 
+                                    className={`control ${hintActive && usedHints !== GAME_RULES.MAX_HINTS ? 'loadingHint' : wasHintActive.current && usedHints !== GAME_RULES.MAX_HINTS ? 'bounce' : ''}`} 
+                                    onClick={hint} 
+                                    disabled={gameStatus !== GAME_STATUS.STARTED || hintActive || usedHints >= GAME_RULES.MAX_HINTS} 
+                                >
+                                    <HintIcon />
+                                </button>
+                                { usedHints !== GAME_RULES.MAX_HINTS && gameStatus === GAME_STATUS.STARTED ?
+                                    // <p>{GAME_RULES.MAX_HINTS - usedHints}</p> :<></>
+                                    <span 
+                                        style={{pointerEvents: gameStatus !== GAME_STATUS.STARTED || hintActive || usedHints >= GAME_RULES.MAX_HINTS ? 'none' : 'auto'}}
+                                        onClick={hint}
+                                        className="hintBadge">{GAME_RULES.MAX_HINTS - usedHints}
+                                    </span> :<></>
+                                }
+                            </div>
+                        </OverlayTrigger>
+                    }
+                    { gameStatus !== GAME_STATUS.STARTED ?
                         <button 
                             className="control" 
                             onClick={giveUp} 
@@ -168,25 +146,25 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                         >
                             <GiveUpIcon />
                         </button>
-                    </OverlayTrigger>
-                }
-                { gameStatus === GAME_STATUS.NOT_STARTED ?
-                    <button 
-                        className="control" 
-                        onClick={() => reset()} 
-                        disabled={gameStatus === GAME_STATUS.NOT_STARTED} 
-                    >
-                        <ResetIcon />
-                    </button>
-                    :
-                    <OverlayTrigger
-                        delay={{ show: 700, hide: 0 }}
-                        key='resetOverlay'
-                        placement='top'
-                        overlay={
-                            <Tooltip className="customTooltip" id='tooltip-top'>Regenerar tablero</Tooltip>
-                        }
-                    >
+                        :
+                        <OverlayTrigger
+                            delay={{ show: 700, hide: 0 }}
+                            key='giveUpOverlay'
+                            placement='top'
+                            overlay={
+                                <Tooltip className="customTooltip" id='tooltip-top'>Rendirse</Tooltip>
+                            }
+                        >
+                            <button 
+                                className="control" 
+                                onClick={giveUp} 
+                                disabled={gameStatus !== GAME_STATUS.STARTED} 
+                            >
+                                <GiveUpIcon />
+                            </button>
+                        </OverlayTrigger>
+                    }
+                    { gameStatus === GAME_STATUS.NOT_STARTED ?
                         <button 
                             className="control" 
                             onClick={() => reset()} 
@@ -194,8 +172,25 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                         >
                             <ResetIcon />
                         </button>
-                    </OverlayTrigger>
-                }
+                        :
+                        <OverlayTrigger
+                            delay={{ show: 700, hide: 0 }}
+                            key='resetOverlay'
+                            placement='top'
+                            overlay={
+                                <Tooltip className="customTooltip" id='tooltip-top'>Regenerar tablero</Tooltip>
+                            }
+                        >
+                            <button 
+                                className="control" 
+                                onClick={() => reset()} 
+                                disabled={gameStatus === GAME_STATUS.NOT_STARTED} 
+                            >
+                                <ResetIcon />
+                            </button>
+                        </OverlayTrigger>
+                    }
+                    </section>
                 </section>
             </>
         }
