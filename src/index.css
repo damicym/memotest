@@ -106,6 +106,18 @@ html, body{
   justify-content: center;
 }
 
+.title{
+  display: grid;
+  position: relative;
+}
+
+.title svg{
+  grid-column: 2;
+  color: var(--dark);
+  position: absolute;
+  margin-left: 1px;
+}
+
 .opciones h1{
   color: var(--accent);
   margin: 0;
@@ -220,6 +232,9 @@ html, body{
   color: var(--lightGray);
   font-family: "Lexend Deca", sans-serif !important;
   font-weight: 350;
+  max-width: 300px;
+  width: max-content;
+  white-space: normal;
 }
 
 .control:disabled{
