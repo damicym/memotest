@@ -31,14 +31,42 @@ export const TIMINGS = Object.freeze({
   BETWEEN_WIN_CONFETTI: 0.5 * 1000,
 })
 
-export const GAME_RULES = Object.freeze({
-  MAX_HINTS: 3,
-  EXCLUDED_Q_PAIRS: [34, 38, 46]
+export const GAME_MODES_DESCRIPTIONS = Object.freeze({
+  ERROR: "Parece que se ha producido un error al determinar el modo de juego :(",
+  BETA: "Esto es una beta. Próximamente habrá nuevos modos, desafíos diarios y leaderbaord de jugadores",
+  CLASSIC: "Memotest sin nada nuevo: Encontrá los pares de fichas que coincidan en ícono y color. Podés usar pistas.",
+  SEQUENCE: "Encontrá secuencias de fichas: Ya no solo importa su color, sino también el orden en el que las das vuelta. Podés usar pistas.",
 })
 
+export const GAME_RULES = Object.freeze({
+  DEFAULT_TOTAL_PAIRS: 10,
+  MIN_TOTAL_PAIRS: 4,
+  MAX_TOTAL_PAIRS: 50,
+  MAX_HINTS: 3,
+  EXCLUDED_Q_PAIRS: [34, 38, 46],
+  CLASSIC_DEFAULT_FICHAS_Q: [6, 12, 18, 24, 30],
+  SEQUENCE_DEFAULT_FICHAS_Q: [8, 16, 24, 32, 40]
+})
+
+export const GAME_MODES = Object.freeze({
+  CLASSIC: 0,
+  SEQUENCE: 1,
+})
+
+function getFichasQ(gameMode, prevPairs = null){
+  return gameMode === GAME_MODES.CLASSIC 
+    ? GAME_RULES.CLASSIC_DEFAULT_FICHAS_Q[1] 
+    : gameMode === GAME_MODES.SEQUENCE 
+    ? GAME_RULES.SEQUENCE_DEFAULT_FICHAS_Q[1] 
+    : prevPairs 
+    ? prevPairs
+    : GAME_RULES.DEFAULT_TOTAL_PAIRS
+}
+
 function Juego() {
-  const [totalPairs, setTotalPairs] = useState(10)
-  const prevValuePairs = useRef(10)
+  const [gameMode, setGameMode] = useState(0)
+  const [totalPairs, setTotalPairs] = useState(getFichasQ(gameMode))
+  const prevValuePairs = useRef(getFichasQ(gameMode))
   const [fichas, setFichas] = useState([])
   const [columns, setColumns] = useState(0)
   const [isBoardLocked, setIsBoardLocked] = useState(false) // depsues de tocar una ficha incorrecta se lockea el juego por un tiempo
@@ -52,10 +80,24 @@ function Juego() {
   const [shouldFichasAnimate, setShouldFichasAnimate] = useState(true)
   const [shapesNColors, setShapesNColors] = useState([])
   const [usedHints, setUsedHints] = useState(0)
+  const [isFirstRender, setIsFirstRender] = useState(true)
+  const timeoutFlipAllFichas = useRef(null)
 
   useEffect(() => {
     reset("totalPairsChange")
   }, [totalPairs])
+
+  useEffect(() => {
+    if (isFirstRender) {
+      setIsFirstRender(false)
+      return
+    }
+
+    const newTotal = getFichasQ(gameMode, totalPairs)
+    prevValuePairs.current = newTotal
+    setTotalPairs(newTotal)
+  }, [gameMode])
+
 
   useEffect(() => {
     if (fichas.length > 0 && gameStatus !== GAME_STATUS.GIVEN_UP) {
@@ -108,13 +150,14 @@ function Juego() {
 
   // para opciones:
   const reset = (via = "resetBtn") => {
-    setShapesNColors(prev => prev.length > 0 ? [] : prev)
+    clearTimeout(timeoutFlipAllFichas.current)
     setIsBoardLocked(true)
-
+    
     let next = [...fichas]
     next.forEach(f => f.status = FICHA_STATUS.ESCONDIDA)
     setFichas(next)
-
+    
+    setShapesNColors(prev => prev.length > 0 ? [] : prev)
     setUsedHints(0)
     setErrors(0)
     setClicks(0)
@@ -124,16 +167,17 @@ function Juego() {
     setHintActive(false)
     wasHintActive.current = false
 
-    if(via == "totalPairsChange"){
-      setShouldFichasAnimate(false)
+    const fichasInit = () => {
       setFichas(inicializarFichas(totalPairs))
       setIsBoardLocked(false)
-    } else if(via == "resetBtn"){
+    }
+
+    if (via === "totalPairsChange") {
+      setShouldFichasAnimate(false)
+      fichasInit()
+    } else {
       setShouldFichasAnimate(true)
-      setTimeout(() => {
-        setFichas(inicializarFichas(totalPairs))
-        setIsBoardLocked(false)
-      }, TIMINGS.FICHA_FLIP)
+      timeoutFlipAllFichas.current = setTimeout(fichasInit, TIMINGS.FICHA_FLIP)
     }
   }
   // que cuando se resetee por cambio de totalParis
@@ -189,6 +233,8 @@ function Juego() {
         totalPairs={totalPairs} 
         setTotalPairs={setTotalPairs} 
         prevValuePairs={prevValuePairs}
+        gameMode={gameMode}
+        setGameMode={setGameMode}
       />
       <Stats
         totalPairs={totalPairs}

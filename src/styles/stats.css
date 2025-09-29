@@ -45,7 +45,6 @@
   grid-column: 2;
   grid-template-columns: 1fr auto 1fr;
   display: grid;
-  flex: 1;
   gap: 15px;
   align-items: center;
   justify-content: center;
@@ -57,7 +56,6 @@
 }
 .statsInfo .timer{
   grid-column: 1 !important;
-  /* position: absolute; */
   background: rgba(240, 244, 239, 0.2); /* var light en RGB */
   border-radius: 7px;
   padding: 1px;
@@ -70,7 +68,6 @@
   position: absolute;
   align-items: center;
   justify-content: center;
-  /* justify-self: end; */
   margin-left: 10px;
 }
 

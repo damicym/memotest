@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
+
 .opciones, .stats{
   /* flex: 0 0 auto; */
   position: relative; /* importante */
@@ -6,7 +8,6 @@
   align-items: center;
   width: 100%;
   margin: 0;
-  box-sizing: border-box;
 }
 
 .opciones{
@@ -20,29 +21,135 @@
   justify-content: center;
 }
 
+.gameMode{
+  /* display: flex; */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  justify-content: center;
+  align-items: center;
+}
+
 .title{
   display: grid;
+  /* gap: 5px; */
   position: relative;
+  align-items: center;
+  justify-content: center;
+  grid-template-columns: 1fr auto 1fr;
+  width: 250px;
 }
 
-.title svg{
+.title h1{
   grid-column: 2;
-  color: var(--dark);
-  position: absolute;
-  margin-left: 1px;
-}
-
-.opciones h1{
+  font-family: "Jersey 10", sans-serif;
+  font-weight: 400;
+  font-style: normal;
   color: var(--accent);
   margin: 0;
-  font-size: 2.2rem;
+  font-size: 3.2rem;
+}
+
+.title .modeInfo{
+  grid-column: 3;
+  color: var(--dark);
+  margin-left: 1px;
+  margin-top: 2px;
+  align-self: flex-start;
+  z-index: 99;
+}
+
+.modesBtnContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.opciones button svg {
+  width: 80%;
+  height: 80%;
+}
+
+.gameMode .modeBtn{
+  padding: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px 4px 10px 4px;
+  color: var(--lightGray) !important;
+  border: none;
+  border-bottom: 2px solid;
+  border-color: var(--lightGray);
+  background: var(--accent);
+}
+.modeBtn:disabled{
+  opacity: 0.6;
+  color: inherit;
+}
+
+.selectorAllContainer{
+  z-index: 1;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 7px;
+  justify-content: center;
+  align-items: center;
+}
+.selectorAllContainer label{
+  color: var(--accent);
+  grid-column: 1;
+  font-weight: 450;
+}
+.selectorBtnContainer{
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+  align-items: center;
+  grid-column: 2;
+}
+.selectorBtn{
+  background-color: var(--lightGray);
+  color: var(--accent);
+  border-radius: 7px;
+  border: none;
+  border-bottom: 2px solid;
+  border-color: var(--accent);
+  width: 60px;
+  height: 35px;
+  font-size: 1.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.selectorBtn.selected{
+  color: var(--lightGray) !important;
+  background-color: var(--accent);
+  border-color: var(--lightGray);
+}
+.modeBtn:active, .selectorBtn:active {
+  transform: translateY(5px);
+}
+.selectorBtn:hover {
+  filter: brightness(1.03);
+}
+.modeBtn:hover, .selectorBtn.selected:hover {
+  filter: brightness(1.13);
+}
+.modeBtn:disabled:hover, .selectorBtn:disabled:hover {
+  filter: none !important;
 }
 
 .campo{
+  z-index: 2;
   display: flex;
   align-items: center;
   margin-bottom: 2px;
 }
+
 .campo label{
   position: absolute;
   transform: translateX(-105%);
@@ -55,4 +162,59 @@ input[type="range"] {
   accent-color: var(--accent);
   width: 150px;
   margin: 0;
+}
+
+.titleContainer {
+  position: relative;
+  overflow: hidden;
+}
+
+.titleContainer::before,
+.titleContainer::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 20px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.titleContainer::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--main) 0%, transparent 20%);
+}
+
+.titleContainer::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--main) 0%, transparent 40%);
+}
+
+.slide-enter {
+  animation: slideEnter 0.6s ease-out forwards;
+}
+
+.slide-exit {
+  animation: slideExit 0.6s ease-in forwards;
+}
+
+@keyframes slideEnter {
+  from {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes slideExit {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100px);
+    opacity: 0;
+  }
 }

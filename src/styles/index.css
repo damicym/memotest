@@ -25,6 +25,8 @@ html{
 
 body {
   font-family: "Lexend Deca", sans-serif !important;
+  font-optical-sizing: auto;
+  font-style: normal;
   background-color: var(--light);
   background-image: radial-gradient(var(--gameBgSecondary) 2px, transparent 2px);
   background-size: 32px 32px;
@@ -35,6 +37,10 @@ html, body{
   height: 100%;
   margin: 0;
   overflow-x: hidden;
+}
+
+button, input{
+  outline: none;
 }
 
 .customTooltip {

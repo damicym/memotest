@@ -10,7 +10,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
 function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameStatus, hintActive, wasHintActive, usedHints }){
-    const [puntos, setPuntos] = useState("...")
+    const [animatedDots, setPuntos] = useState("...")
     const [secondsInGame, setSeconds] = useState()
     const [timeInGame, setTimeInGame] = useState(0)
 
@@ -49,7 +49,7 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
         { gameStatus === GAME_STATUS.NOT_STARTED ? 
             <div className='waiting'>
                 <p>Esperando a que empieces a jugar para mostrar estadísticas</p>
-                <p>{puntos}</p>
+                <p>{animatedDots}</p>
             </div>
         :  
             <>
@@ -96,6 +96,7 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                     { gameStatus !== GAME_STATUS.STARTED || hintActive || usedHints >= GAME_RULES.MAX_HINTS ?
                         <div className="hintBtnContainer">
                             <button 
+                                tabIndex={-1}
                                 className={`control ${hintActive && usedHints !== GAME_RULES.MAX_HINTS ? 'loadingHint' : wasHintActive.current && usedHints !== GAME_RULES.MAX_HINTS ? 'bounce' : ''}`} 
                                 onClick={hint} 
                                 disabled={gameStatus !== GAME_STATUS.STARTED || hintActive || usedHints >= GAME_RULES.MAX_HINTS} 
@@ -121,6 +122,7 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                         >
                             <div className="hintBtnContainer">
                                 <button 
+                                    tabIndex={-1}
                                     className={`control ${hintActive && usedHints !== GAME_RULES.MAX_HINTS ? 'loadingHint' : wasHintActive.current && usedHints !== GAME_RULES.MAX_HINTS ? 'bounce' : ''}`} 
                                     onClick={hint} 
                                     disabled={gameStatus !== GAME_STATUS.STARTED || hintActive || usedHints >= GAME_RULES.MAX_HINTS} 
@@ -140,6 +142,7 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                     }
                     { gameStatus !== GAME_STATUS.STARTED ?
                         <button 
+                            tabIndex={-1}
                             className="control" 
                             onClick={giveUp} 
                             disabled={gameStatus !== GAME_STATUS.STARTED} 
@@ -156,6 +159,7 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                             }
                         >
                             <button 
+                                tabIndex={-1}
                                 className="control" 
                                 onClick={giveUp} 
                                 disabled={gameStatus !== GAME_STATUS.STARTED} 
@@ -166,6 +170,7 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                     }
                     { gameStatus === GAME_STATUS.NOT_STARTED ?
                         <button 
+                            tabIndex={-1}
                             className="control" 
                             onClick={() => reset()} 
                             disabled={gameStatus === GAME_STATUS.NOT_STARTED} 
@@ -182,6 +187,7 @@ function Stats({ totalPairs, qGuessedPairs, errors, reset, hint, giveUp, gameSta
                             }
                         >
                             <button 
+                                tabIndex={-1}
                                 className="control" 
                                 onClick={() => reset()} 
                                 disabled={gameStatus === GAME_STATUS.NOT_STARTED} 
