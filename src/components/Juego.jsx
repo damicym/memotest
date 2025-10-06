@@ -63,7 +63,7 @@ export const GAME_RULES = Object.freeze({
 
 export const GAME_MODES = Object.freeze({
   CLASSIC: 0,
-  SEQUENCE: 1,
+  SEQUENCE: 1
 })
 
 function Juego() {
