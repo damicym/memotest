@@ -1,17 +1,47 @@
-.svg-container{
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap');
 
 .ficha svg{
   width: 100%;
   height: 100%;
 }
 
+.svg-container{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.order-icon-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.orderError{
+  animation: bounceError 0.5s cubic-bezier(.28,.84,.42,1) 0.3s, flashRed 0.5s ease 0.3s;
+}
+
+@keyframes bounceError {
+  0% { transform: translateY(0); }
+  30% { transform: translateY(-5px) scale(1.1); }
+  60% { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
+@keyframes flashRed {
+  0%, 100% { color: var(--muyMal); filter: none; }
+  50% { color: var(--muyMal); filter: drop-shadow(0 0 6px var(--muyMal)); }
+}
+
 .ficha p{
-  font-family: "Knewave", system-ui;
+  font-family: "DynaPuff", system-ui;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
   text-align: center;
   margin: 0;
   width: 100%;
@@ -63,7 +93,8 @@
 }
 
 .ficha-front{
-  transform: rotateY(180deg)
+  gap: 5px;
+  transform: rotateY(180deg);
 }
 
 .adivinada {

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine }){
     const [showShadow, setShowShadow] = useState(true)
 
-    const { id, name, Icon, color, status, beingHinted } = ficha
+    const { id, name, Icon, SecondaryIcon, color, status, beingHinted } = ficha
     const alphaColor = color.replace('1)', '0.5)')
 
     useEffect(() => {
@@ -25,9 +25,9 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine
     }
 
     const getAnimationClass = () => {
-        if (beingHinted && status === FICHA_STATUS.ERROR) return 'hinted-and-error'
+        if (beingHinted && (status === FICHA_STATUS.ERROR /* || status === FICHA_STATUS.ORDER_ERROR */)) return 'hinted-and-error'
         if (beingHinted) return 'hinted'
-        if (status === FICHA_STATUS.ERROR) return 'error'
+        if (status === FICHA_STATUS.ERROR /* || status === FICHA_STATUS.ORDER_ERROR */) return 'error'
         return ''
     }
 
@@ -40,14 +40,14 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine
                 transition: 'all 0.4s',
                 cursor: status === FICHA_STATUS.ESCONDIDA && !lockState  ? 'pointer' : 'auto',
                 filter: showShadow ? 'drop-shadow(0px 0px 1px var(--dark))' : 'none',
-                transform: status === FICHA_STATUS.MOSTRADA || status === FICHA_STATUS.ERROR ? 'scale(1.05)' : 'scale(1)',
+                transform: status === FICHA_STATUS.MOSTRADA || status === FICHA_STATUS.ERROR || status === FICHA_STATUS.ORDER_ERROR ? 'scale(1.05)' : 'scale(1)',
             }}
         >
             <div className="ficha-inner"
                 onTransitionStart={handleInnerTransitionStart}
                 style={{
                     transition: shouldFichasAnimate ? 'transform 0.5s ease' : 'none',
-                    ...(status === FICHA_STATUS.MOSTRADA || status === FICHA_STATUS.ERROR || status === FICHA_STATUS.ADIVINADA ) && shouldFichasAnimate
+                    ...(status === FICHA_STATUS.MOSTRADA || status === FICHA_STATUS.ERROR || status === FICHA_STATUS.ORDER_ERROR || status === FICHA_STATUS.ADIVINADA ) && shouldFichasAnimate
                     ? { transform: 'rotateY(180deg)' } 
                     : { transform: 'none' }
                 }}
@@ -65,13 +65,21 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine
                 <div className={`ficha-front ${status === FICHA_STATUS.ADIVINADA && timeToShine ? 'adivinada' : ''}`}
                     style={{
                         borderColor: alphaColor, 
-                        backgroundColor: 'var(--lightGray)'
+                        backgroundColor: 'var(--light)'
                     }}
                 >
+                    { SecondaryIcon &&
+                        <div className={`order-icon-container ${status === FICHA_STATUS.ORDER_ERROR ? 'orderError' : ''}`}>
+                            <SecondaryIcon color={color} size='35'></SecondaryIcon>
+                        </div>
+                    }
                     <div className="svg-container">
+                        {/* <SecondaryIcon color={color} size='30'></SecondaryIcon> */}
                         <Icon color={color} size='40'></Icon>
                     </div>
-                    <p style={{color: color}}>{name}</p>
+                    { name && name.length &&
+                        <p style={{color: color}}>{name}</p>
+                    }
                 </div>
             </div>
 

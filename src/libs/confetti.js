@@ -82,11 +82,11 @@ const oneIconFireParams = {
 }
 
 export async function toOneShapeNColor(ficha, prevShapesNColors, callback){
-  if(prevShapesNColors.find(shape => shape.pairId === ficha.pairId)) return
+  if(prevShapesNColors.find(shape => shape.groupId === ficha.groupId)) return
   const shapeFromIcon = confetti.shapeFromPath({
     path: getPathFromIcon(ficha.Icon),
   })
-  let shapeNColor = { pairId: ficha.pairId, shape: shapeFromIcon, color: hslaToHex(ficha.color) }
+  let shapeNColor = { groupId: ficha.groupId, shape: shapeFromIcon, color: hslaToHex(ficha.color) }
   if (typeof callback === 'function') {
     callback(prev => [...prev, shapeNColor])
   }

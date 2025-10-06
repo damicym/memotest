@@ -1,42 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Knewave&family=Lexend+Deca:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import url(juego.css);
 @import url(stats.css);
 @import url(opciones.css);
 @import url(tablero.css);
 @import url(ficha.css);
 
-@import url('https://fonts.googleapis.com/css2?family=Knewave&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Knewave&family=Lexend+Deca:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
+html.sequence-mode{
+  --main: #B4E7DD;
+  --accent: #2D6A5F;
+  --dark: #0D211C;
+  --light: #E8ECE9;
+  --statsBgSecondary: #306E63;
+}
+
+.opciones, .stats {
+  /* transition: background-color 2s ease, color 2s ease, border-color 2s ease; */
+}
+
 html{
+  transition: all 0.5s;
   --main: #B4CDED;
   --accent: #344966;
-  --dark: #0D1821;
-  --light: #F0F4EF;
-  --lightGray: #E9ECE8;
-  --alert: #c23546;
-  --success: #3AB26F;
-  --gameBgSecondary: #E2E7E3;
   --statsBgSecondary: #374D6A;
+  --dark: #0D1821;
+  --light: #E9ECE8;
+
+  --lightBg: #F0F4EF;
+  --gameBgSecondary: #E2E7E3;
+  --muyMal: #c23546;
+  --muyBien: #3AB26F;
+  
+  /* --mal: #D97942; */
+  /* --regular: #E8B449; */
+  /* --bien: #8FC054; */
+  /* --progress-0:  #d64545; */
+  /* --progress-1:  #dc5a45; */
+  /* --progress-2:  #e16f45; */
+  /* --progress-3:  #e67e50; */
+  /* --progress-4:  #e6a54a; */
+  /* --progress-5:  #e6c04a; */
+  /* --progress-6:  #c8d94d; */
+  /* --progress-7:  #9acc4d; */
+  /* --progress-8:  #6fc95b; */
+  /* --progress-9:  #46c96c; */
+  /* --progress-10: #2fd97a; */
 }
 
 body {
   font-family: "Lexend Deca", sans-serif !important;
   font-optical-sizing: auto;
   font-style: normal;
-  background-color: var(--light);
+  background-color: var(--lightBg);
   background-image: radial-gradient(var(--gameBgSecondary) 2px, transparent 2px);
   background-size: 32px 32px;
-  background-color: var(--light);
+  background-color: var(--lightBg);
 }
 
 html, body{
-  height: 100%;
+  height: 100vh;
   margin: 0;
   overflow-x: hidden;
+  overflow-y: hidden !important;
+}
+
+#root{
+  overflow-y: hidden;
+  height: 100vh;
 }
 
 button, input{
@@ -49,19 +82,19 @@ button, input{
 }
 .customTooltip .tooltip-inner{
   background-color: var(--dark);
-  color: var(--lightGray);
+  color: var(--light);
   font-family: "Lexend Deca", sans-serif !important;
   font-weight: 350;
-  max-width: 300px;
+  max-width: 320px;
   width: max-content;
   white-space: normal;
+  text-align: justify;
 }
 
 /* .success{
   animation: twinkleSuccess 1s steps(1);
 }
-
 @keyframes twinkleSuccess {
-  0%, 50% { color: var(--success); }
-  25%, 75% { color: var(--light); }
+  0%, 50% { color: var(--muyBien); }
+  25%, 75% { color: var(--lightBg); }
 } */

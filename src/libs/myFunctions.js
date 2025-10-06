@@ -1,18 +1,33 @@
 import { getRandomIcon } from "./icons"
-import { FICHA_STATUS } from "../components/Juego"
+import { FICHA_STATUS, GAME_MODES, GAME_RULES } from "../components/Juego"
+import { TbCircleNumber1Filled as OneIcon, TbCircleNumber2Filled as TwoIcon, TbCircleNumber3Filled as ThreeIcon, TbCircleNumber4Filled as FourIcon, TbCircleNumber5Filled as FiveIcon, TbCircleNumber6Filled as SixIcon } from "react-icons/tb";
+export const numberIcons = [OneIcon, TwoIcon, ThreeIcon, FourIcon, FiveIcon, SixIcon]
 
 export function splitCamelCase(str) {
     return str.replace(/([A-Z])/g, ' $1').trim()
 }
 
-export function deleteExtraWords(str, qWords, maxChars) {
-    const words = str.split(" ")
-    let auxStr = words.slice(0, qWords).join(" ")
+// export function deleteExtraWords(str, qWords, maxChars) {
+//     const words = str.split(" ")
+//     let auxStr = words.slice(0, qWords).join(" ")
+//     if (auxStr.length > maxChars) {
+//         auxStr = words[0]
+//         auxStr = auxStr.slice(0, maxChars) + '\n' + auxStr.slice(maxChars)
+//     }
+//     return auxStr
+// }
 
-    if (auxStr.length > maxChars) {
-        auxStr = words[0]
-    }
-    return auxStr
+export function deleteExtraWords(str, qWords, charsPerWord) {
+    const words = str.split(" ")
+    const validWords = words
+        .filter(w => w.length <= charsPerWord)
+        .slice(0, qWords)
+    if(validWords.length) return validWords.join(" ")
+    else return words[0].slice(charsPerWord)
+}
+
+export function separarNumerosYPalabras(texto) {
+    return texto.replace(/([a-zA-Z])(\d)|(\d)([a-zA-Z])/g, '$1$3 $2$4');
 }
 
 export function getReadableRGB() {
@@ -121,8 +136,8 @@ export function shuffle(array) {
     return arr
 }
 
-export function defineColumns(pares) {
-    const totales = pares * 2
+export function defineColumns(groups, fichasPerGroup) {
+    const totales = groups * fichasPerGroup
     if (Math.sqrt(totales) === Math.ceil(Math.sqrt(totales))) return Math.sqrt(totales)
     else {
         for (let i = 0; i < totales; i++) {
@@ -164,26 +179,61 @@ export function randomInRange(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-export function inicializarFichas(totalPairs, suffle = true) {
+function getHslaWError(colorOffset, totalSections, currentSection){
+    const colorSection = 360 / totalSections * currentSection
+    const colorErrorPerc = 360 / totalSections * currentSection * 5 / 100
+    const colorError = (Math.random() * 2 * colorErrorPerc) - colorErrorPerc
+    const colorHue = Math.min(359, (colorSection + colorError + colorOffset))
+    return `hsla(${colorHue}, 40%, 40%, 1)`
+}
+
+export function getFancyModeName(modeName){
+    return modeName === GAME_MODES.CLASSIC ? 'Clásico' : modeName === GAME_MODES.SEQUENCE ? 'Secuencia' : 'Modo no seleccionado'
+}
+
+export function inicializarFichas(totalGroups, fichasPerGroup, gameMode, suffle = true) {
     let auxFichas = []
     let keyCounter = 0
-
-    const colorOffset = Math.random() * 360 / totalPairs
-    for (let index = 0; index < totalPairs; index++) {
-        const { Icon, name } = getRandomIcon()
-
-        const colorSection = 360 / totalPairs * index
-        const colorErrorPerc = 360 / totalPairs * index * 5 / 100
-        const colorError = (Math.random() * 2 * colorErrorPerc) - colorErrorPerc
-        const colorHue = Math.min(359, (colorSection + colorError + colorOffset))
-        const colorFinal = `hsla(${colorHue}, 40%, 40%, 1)`
-
-        auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: FICHA_STATUS.ESCONDIDA, beingHinted: false })
-        auxFichas.push({ id: keyCounter++, pairId: index, name, Icon, color: colorFinal, status: FICHA_STATUS.ESCONDIDA, beingHinted: false })
+    const colorOffset = Math.random() * 360 / totalGroups
+    // por c/grupo
+    for(let index = 0; index < totalGroups; index++){
+        // definir info de fichas del grupo
+        const fichaAppearance = getRandomIcon()
+        const colorFinal = getHslaWError(colorOffset, totalGroups, index)
+        // agregar fichas del grupo
+        for (let fichaOfGroup = 0; fichaOfGroup < fichasPerGroup; fichaOfGroup++) {
+            auxFichas.push({ 
+                id: keyCounter++, 
+                groupId: index, 
+                name: gameMode === GAME_MODES.CLASSIC ? fichaAppearance.name : null, 
+                Icon: fichaAppearance.Icon,
+                order: gameMode === GAME_MODES.SEQUENCE ? fichaOfGroup + 1 : null, // empieza en 1
+                SecondaryIcon: gameMode === GAME_MODES.SEQUENCE ? numberIcons[fichaOfGroup] : null,
+                color: colorFinal, 
+                status: FICHA_STATUS.ESCONDIDA, 
+                beingHinted: false 
+            })
+        }
     }
-    if (suffle) {
-        auxFichas = shuffle(auxFichas)
-    }    
+    if(suffle) auxFichas = shuffle(auxFichas)
     return auxFichas
 }
 
+export function initializeOptions(gameMode){
+    return gameMode === GAME_MODES.CLASSIC 
+        ? GAME_RULES.CLASSIC_TABLERO_TYPES
+        : gameMode === GAME_MODES.SEQUENCE
+            ? GAME_RULES.SEQUENCE_TABLERO_TYPES
+            : []
+}
+
+export function getGroupsNFichasPerG(gameMode, sizeIndex){
+    if(gameMode === GAME_MODES.CLASSIC) return { 
+        groups: GAME_RULES.CLASSIC_TABLERO_TYPES[sizeIndex].groups, 
+        fichasPerGroup: GAME_RULES.CLASSIC_TABLERO_TYPES[sizeIndex].fichasPerGroup
+    }
+    else if(gameMode === GAME_MODES.SEQUENCE) return { 
+        groups: GAME_RULES.SEQUENCE_TABLERO_TYPES[sizeIndex].groups, 
+        fichasPerGroup: GAME_RULES.SEQUENCE_TABLERO_TYPES[sizeIndex].fichasPerGroup 
+    }
+}

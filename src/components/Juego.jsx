@@ -2,10 +2,11 @@ import { useEffect, useState, useRef } from 'react'
 import Tablero from './Tablero'
 import Opciones from './Opciones'
 import Stats from './Stats'
-import { defineColumns, inicializarFichas } from '../libs/myFunctions'
+import { defineColumns, inicializarFichas, getGroupsNFichasPerG } from '../libs/myFunctions'
 import { fireWin } from '../libs/confetti'
 
 export const FICHA_STATUS = Object.freeze({
+  ORDER_ERROR: -2,
   ERROR: -1,
   ESCONDIDA: 0,
   MOSTRADA: 1,
@@ -21,6 +22,7 @@ export const GAME_STATUS = Object.freeze({
 
 export const TIMINGS = Object.freeze({
   BEFORE_HIDING_FICHA: 0.95 * 1000,
+  EXTRA_TIME: 0.3 * 1000,
   FICHA_FLIP: 0.5 * 1000,
   HINT_COOLDOWN: 2 * 1000,
   HINT_DURATION: 1.6 * 1000,
@@ -35,17 +37,28 @@ export const GAME_MODES_DESCRIPTIONS = Object.freeze({
   ERROR: "Parece que se ha producido un error al determinar el modo de juego :(",
   BETA: "Esto es una beta. Próximamente habrá nuevos modos, desafíos diarios y leaderbaord de jugadores",
   CLASSIC: "Memotest sin nada nuevo: Encontrá los pares de fichas que coincidan en ícono y color. Podés usar pistas.",
-  SEQUENCE: "Encontrá secuencias de fichas: Ya no solo importa su color, sino también el orden en el que las das vuelta. Podés usar pistas.",
+  SEQUENCE: "Encontrá secuencias de fichas: Ya no solo importa que coincidan, sino también el orden en el que las das vuelta. Podés usar pistas.",
 })
 
 export const GAME_RULES = Object.freeze({
-  DEFAULT_TOTAL_PAIRS: 10,
+  DEFAULT_TABLERO_SIZE: 1,
   MIN_TOTAL_PAIRS: 4,
   MAX_TOTAL_PAIRS: 50,
   MAX_HINTS: 3,
   EXCLUDED_Q_PAIRS: [34, 38, 46],
-  CLASSIC_DEFAULT_FICHAS_Q: [6, 12, 18, 24, 30],
-  SEQUENCE_DEFAULT_FICHAS_Q: [8, 16, 24, 32, 40]
+  CLASSIC_GROUPS: 2,
+  CLASSIC_TABLERO_TYPES: [ 
+    { name: "Chico", groups: 6, fichasPerGroup: 2 }, 
+    { name: "Mediano", groups: 12, fichasPerGroup: 2 }, 
+    { name: "Grande", groups: 20, fichasPerGroup: 2 }, 
+    /* { name: "Enorme", groups: 35, fichasPerGroup: 2 } */
+  ],
+  SEQUENCE_TABLERO_TYPES: [ 
+    { name: "Chico", groups: 8, fichasPerGroup: 2 }, 
+    { name: "Mediano", groups: 12, fichasPerGroup: 2 }, 
+    { name: "Grande", groups: 16, fichasPerGroup: 2 }, 
+    /* { name: "Enorme", groups: 16, fichasPerGroup: 4 } */
+  ]
 })
 
 export const GAME_MODES = Object.freeze({
@@ -53,20 +66,11 @@ export const GAME_MODES = Object.freeze({
   SEQUENCE: 1,
 })
 
-function getFichasQ(gameMode, prevPairs = null){
-  return gameMode === GAME_MODES.CLASSIC 
-    ? GAME_RULES.CLASSIC_DEFAULT_FICHAS_Q[1] 
-    : gameMode === GAME_MODES.SEQUENCE 
-    ? GAME_RULES.SEQUENCE_DEFAULT_FICHAS_Q[1] 
-    : prevPairs 
-    ? prevPairs
-    : GAME_RULES.DEFAULT_TOTAL_PAIRS
-}
-
 function Juego() {
   const [gameMode, setGameMode] = useState(0)
-  const [totalPairs, setTotalPairs] = useState(getFichasQ(gameMode))
-  const prevValuePairs = useRef(getFichasQ(gameMode))
+  const { groups: newGroups, fichasPerGroup: newFichasPerGroup } = getGroupsNFichasPerG(gameMode, GAME_RULES.DEFAULT_TABLERO_SIZE)
+  const [totalGroups, setTotalGroups] = useState(() => newGroups)
+  const prevValuePairs = useRef(newGroups)
   const [fichas, setFichas] = useState([])
   const [columns, setColumns] = useState(0)
   const [isBoardLocked, setIsBoardLocked] = useState(false) // depsues de tocar una ficha incorrecta se lockea el juego por un tiempo
@@ -82,36 +86,70 @@ function Juego() {
   const [usedHints, setUsedHints] = useState(0)
   const [isFirstRender, setIsFirstRender] = useState(true)
   const timeoutFlipAllFichas = useRef(null)
+  const [selectedSize, setSelectedSize] = useState(GAME_RULES.DEFAULT_TABLERO_SIZE)
+  const [fichasPerGroup, setFichasPerGroup] = useState(newFichasPerGroup)
+  const resetTriggeredByModeChange = useRef(false)
+  const prevFichasPerGroup = useRef(newFichasPerGroup)
+  const abiertasRef = useRef([])
 
   useEffect(() => {
-    reset("totalPairsChange")
-  }, [totalPairs])
+    reset(false)
+  }, [selectedSize])
 
   useEffect(() => {
     if (isFirstRender) {
       setIsFirstRender(false)
       return
     }
+    if(gameMode === GAME_MODES.SEQUENCE){
+      document.documentElement.classList.add('sequence-mode')
+    } else {
+      document.documentElement.classList.remove('sequence-mode')
+    }
+    let nextSize = selectedSize
+    if (
+      (gameMode === GAME_MODES.CLASSIC && selectedSize >= GAME_RULES.CLASSIC_TABLERO_TYPES.length) ||
+      (gameMode === GAME_MODES.SEQUENCE && selectedSize >= GAME_RULES.SEQUENCE_TABLERO_TYPES.length)
+    ) {
+      nextSize = GAME_RULES.DEFAULT_TABLERO_SIZE
+      setSelectedSize(GAME_RULES.DEFAULT_TABLERO_SIZE)
+    }
 
-    const newTotal = getFichasQ(gameMode, totalPairs)
+    const { groups: newTotal, fichasPerGroup: newFichasPerGroup} = getGroupsNFichasPerG(gameMode, nextSize)
     prevValuePairs.current = newTotal
-    setTotalPairs(newTotal)
+    resetTriggeredByModeChange.current = true
+    setTotalGroups(newTotal)
+    setFichasPerGroup(newFichasPerGroup)
+
+    if (newTotal * newFichasPerGroup === totalGroups * prevFichasPerGroup.current) reset()
+      else if (newTotal === totalGroups ) reset({ wAnimation: false })
+
+    prevFichasPerGroup.current = newFichasPerGroup
   }, [gameMode])
 
+  useEffect(() => {
+    if (resetTriggeredByModeChange.current) {
+      resetTriggeredByModeChange.current = false
+      reset({ wAnimation: false })
+      return
+    }
+    reset({ wAnimation: false })
+  }, [totalGroups])
 
   useEffect(() => {
     if (fichas.length > 0 && gameStatus !== GAME_STATUS.GIVEN_UP) {
-      const qGuessedPairs = fichas.filter(ficha => ficha.status === FICHA_STATUS.ADIVINADA).length / 2
+      const qGuessedPairs = fichas.filter(ficha => ficha.status === FICHA_STATUS.ADIVINADA).length / fichasPerGroup
       setQGuessedPairs(qGuessedPairs)
     }
   }, [fichas])
 
   useEffect(() => {
-    if(qGuessedPairs === totalPairs) setGameStatus(GAME_STATUS.WON)
+    if(qGuessedPairs === totalGroups) setGameStatus(GAME_STATUS.WON)
   }, [qGuessedPairs])
 
   useEffect(() => {
     gameStatusRef.current = gameStatus
+    wasHintActive.current = false
     if(gameStatus === GAME_STATUS.STARTED){
       setShouldFichasAnimate(true)
     }
@@ -124,7 +162,6 @@ function Juego() {
       })
       setFichas(next)
       setHintActive(false)
-      wasHintActive.current = false
     }
     else if(gameStatus === GAME_STATUS.WON){
       fireWin()
@@ -132,14 +169,13 @@ function Juego() {
   }, [gameStatus])
 
   useEffect(() => {
-    if (clicks % 2 !== 0) return
+    if (clicks % fichasPerGroup !== 0) return
     if (fichas.length === 0) return
     if(gameStatus === GAME_STATUS.GIVEN_UP) return
-    const qGuessedPairs = fichas.filter(ficha => ficha.status === FICHA_STATUS.ADIVINADA).length / 2
-    const attempts = clicks / 2
+    const qGuessedPairs = fichas.filter(ficha => ficha.status === FICHA_STATUS.ADIVINADA).length / fichasPerGroup
+    const attempts = clicks / fichasPerGroup
     setErrors(Math.max(0, attempts - qGuessedPairs))
-  }, [clicks, fichas]);
-
+  }, [clicks, fichas])
 
   const sumarClick = () => {
     setClicks(prev => {
@@ -149,9 +185,18 @@ function Juego() {
   }
 
   // para opciones:
-  const reset = (via = "resetBtn") => {
+  const reset = ({ wAnimation } = {wAnimation: true} ) => {
     clearTimeout(timeoutFlipAllFichas.current)
     setIsBoardLocked(true)
+    abiertasRef.current = []
+    let nextFichasPerGroup
+    if (
+      (gameMode === GAME_MODES.CLASSIC && selectedSize >= GAME_RULES.CLASSIC_TABLERO_TYPES.length) ||
+      (gameMode === GAME_MODES.SEQUENCE && selectedSize >= GAME_RULES.SEQUENCE_TABLERO_TYPES.length)
+    ) {
+      nextFichasPerGroup = GAME_RULES.CLASSIC_GROUPS
+    }
+    else nextFichasPerGroup = getGroupsNFichasPerG(gameMode, selectedSize).fichasPerGroup
     
     let next = [...fichas]
     next.forEach(f => f.status = FICHA_STATUS.ESCONDIDA)
@@ -162,17 +207,17 @@ function Juego() {
     setErrors(0)
     setClicks(0)
     setGameStatus(GAME_STATUS.NOT_STARTED)
-    setColumns(defineColumns(totalPairs))
+    setColumns(defineColumns(totalGroups, nextFichasPerGroup))
     setQGuessedPairs(0)
     setHintActive(false)
     wasHintActive.current = false
 
     const fichasInit = () => {
-      setFichas(inicializarFichas(totalPairs))
+      setFichas(inicializarFichas(totalGroups, nextFichasPerGroup, gameMode, /* false */))
       setIsBoardLocked(false)
     }
 
-    if (via === "totalPairsChange") {
+    if (!wAnimation) {
       setShouldFichasAnimate(false)
       fichasInit()
     } else {
@@ -189,16 +234,16 @@ function Juego() {
     if (!fichas || fichas.length === 0) return
     const candidatas = fichas.filter(ficha => ficha.status !== FICHA_STATUS.ADIVINADA)
     if (candidatas.length === 0) return
-    if (usedHints >= GAME_RULES.MAX_HINTS) return
+    // if (usedHints >= GAME_RULES.MAX_HINTS) return
 
     setUsedHints(prev => prev + 1)
     setHintActive(true)
 
     const elegida = candidatas[Math.floor(Math.random() * candidatas.length)]
-    const pairIdElegido = elegida.pairId
+    const groupIdElegido = elegida.groupId
     
     let next = [...fichas]
-    const elegidas = next.filter(f => f.pairId === pairIdElegido)
+    const elegidas = next.filter(f => f.groupId === groupIdElegido)
     elegidas.forEach(f => f.beingHinted = true)
     setFichas(next)
   }
@@ -230,23 +275,28 @@ function Juego() {
   return (
     <main className="juego">
       <Opciones
-        totalPairs={totalPairs} 
-        setTotalPairs={setTotalPairs} 
+        totalGroups={totalGroups} 
+        setTotalGroups={setTotalGroups} 
         prevValuePairs={prevValuePairs}
         gameMode={gameMode}
         setGameMode={setGameMode}
+        selectedSize={selectedSize}
+        setSelectedSize={setSelectedSize}
+        setFichasPerGroup={setFichasPerGroup}
+        prevFichasPerGroup={prevFichasPerGroup}
       />
       <Stats
-        totalPairs={totalPairs}
+        totalGroups={totalGroups}
         qGuessedPairs={qGuessedPairs}
-        errors={errors}
         reset={reset} 
         hint={hint}
         giveUp={giveUp}
         gameStatus={gameStatus}
         hintActive={hintActive}
         wasHintActive={wasHintActive}
-        usedHints={usedHints}
+        fichasPerGroup={fichasPerGroup}
+        gameMode={gameMode}
+        // usedHints={usedHints}
       />
       <div className='tableroContainer'>
         <Tablero 
@@ -259,8 +309,10 @@ function Juego() {
           shouldFichasAnimate={shouldFichasAnimate}
           shapesNColors={shapesNColors}
           setShapesNColors={setShapesNColors}
-          gameStatus={gameStatus}
           gameStatusRef={gameStatusRef}
+          fichasPerGroup={fichasPerGroup}
+          gameMode={gameMode}
+          abiertasRef={abiertasRef}
         />
       </div>
     </main>
