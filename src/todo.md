@@ -1,7 +1,7 @@
 # roughlike
 - empezar con subida de piso y fichas con poderes, después ver lo de roughlike
 - en tiempo determinado ver hasta q tablero llegas (se va agrandando cada vez q completas) (progressbar)
-- fichas con poderes (+tiempo, revelar una ficha, fichas trampa q escondan fichas) (tendrian q ser pares y quedarse disabled apenas se dan vuelta)
+- fichas con poderes (+tiempo, revelar una ficha, fichas trampa q escondan fichas) (tendrian q ser pares y quedarse disabled apenas se dan vuelta)  
 
 # ideas
 - q aparezca el tiempo antes de empezar
@@ -9,20 +9,20 @@
 - ??sacar botones de rendirse y pistas
 - jefes: jefe de secuencia
 - algunas habilidades permanentes o powerups por subir piso, maldiciones o bendiciones iniciales
-  - darkness, siempre se adivinan primeras 2, items, etc
+  - darkness, siempre se adivinan primeras 2, items, etc  
 
 # sist. de economía
 - las fichas dicen arriba cuanto te dan si las adivinas
   - a medida que las erras disminuye
 - tienda de hb pasivas y activas
   - plata extra por racha, cosa de que esperes a saber fichas para tocarlas dsps
-- hb activas con cargas por cada ficha adivinada o tablero completado
+- hb activas con cargas por cada ficha adivinada o tablero completado  
 
 # extras
 - todo esto tendria carteles y animaciones que le den dinamismo
 - ?slider ("personalizado" en vez de icono, sacarlo, o ponerlo dentro de config (¿solo input de ancho?))
 - ¿pixelart?: fichas solo con iconos pixelart, las especiales tienen nombre
-- responsive
+- responsive  
 
 - base de datos usuarios, stats, leaderboard, racha
 - desafio diario con seed en base a fecha (fijarse como se hace) ¿vale la pena?
@@ -31,7 +31,7 @@
   - q se haga efecto para q se note cuando aparece
   - cartel para avisar q lo tiene disponible
   - certificado por
-  - descargar
+  - descargar  
 
 - cambiar todos los pairs por groups dsps de terminar las funciones
 - cambiarle el nombre al repo ¿memodle? ¿memoughlike? (cambiar tmb el header del html)
