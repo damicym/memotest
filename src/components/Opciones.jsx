@@ -10,6 +10,7 @@ import SizeSelector from "./SizeSelector";
 function Opciones({ totalGroups, setTotalGroups, prevValuePairs, gameMode, setGameMode, selectedSize, setSelectedSize, setFichasPerGroup, prevFichasPerGroup }){
     const [animationClass, setAnimationClass] = useState("");
     const [isAnimating, setIsAnimating] = useState(false);
+    const [fancyTitle, setFancyTitle] = useState(getFancyModeName(gameMode))
 
     const handlePairsChange = (newGroups, newFichasPerG = GAME_RULES.CLASSIC_GROUPS) => {
         let expectedNumber = Number(newGroups)
@@ -34,24 +35,27 @@ function Opciones({ totalGroups, setTotalGroups, prevValuePairs, gameMode, setGa
         if (isAnimating) return
         setIsAnimating(true)
         setAnimationClass("slide-exit")
-        
+        setGameMode(prev => {
+            switch (prev){
+                case GAME_MODES.CLASSIC: return GAME_MODES.SEQUENCE
+                break
+                case GAME_MODES.SEQUENCE: return GAME_MODES.CLASSIC
+                break
+                default: return GAME_MODES.CLASSIC
+            }
+        })
         setTimeout(() => {
-            setGameMode(prev => {
-                switch (prev){
-                    case GAME_MODES.CLASSIC: return GAME_MODES.SEQUENCE
-                    break
-                    case GAME_MODES.SEQUENCE: return GAME_MODES.CLASSIC
-                    break
-                    default: return GAME_MODES.CLASSIC
-                }
-            })
             setAnimationClass("slide-enter")
-            setTimeout(() => {
-                setAnimationClass("")
-                setIsAnimating(false)
-            }, TIMINGS.GAME_MODE_CHANGE);
-        }, TIMINGS.GAME_MODE_CHANGE);
+            setIsAnimating(false)
+        }, TIMINGS.GAME_MODE_CHANGE)
+        // setAnimationClass("")
     }
+
+    useEffect(() => {
+        setTimeout(() => {
+            setFancyTitle(getFancyModeName(gameMode))
+        }, TIMINGS.GAME_MODE_CHANGE)
+    }, [gameMode])
 
     return (
         <section className='opciones'>
@@ -62,7 +66,7 @@ function Opciones({ totalGroups, setTotalGroups, prevValuePairs, gameMode, setGa
                 </div>
                 <div className="titleContainer">
                     <div className={`title ${animationClass}`}>
-                        <h1>{getFancyModeName(gameMode)}</h1>
+                        <h1>{fancyTitle}</h1>
                         <div className="modeInfo">
                             <OverlayTrigger
                                 delay={{ show: 100, hide: 0 }}

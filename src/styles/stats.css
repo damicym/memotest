@@ -9,15 +9,15 @@
 } */
 
 .hintBadge{
-  transition: border 0.3s;
+  transition: border 0.5s;
 }
 
 .progressBarComponent, .control, .hintBadge, .loadingHint::after{
-  transition: background-color 0.3s;
+  transition: background-color 0.5s;
 }
 
 .stats, .stats .givenUpText, .progressText, .control, .hintBadge{
-  transition: color 0.3s;
+  transition: color 0.5s;
 }
 
 /* .stats{
@@ -63,7 +63,7 @@
     conic-gradient(from 135deg at 50% 0, #344966 90deg, #0000 0) #374D6A;
   background-size: 64px 32px;
   opacity: 1;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
   z-index: 0;
 }
 
@@ -77,7 +77,7 @@
     conic-gradient(from 135deg at 50% 0, #2D6A5F 90deg, #0000 0) #306E63;
   background-size: 64px 32px;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
   z-index: 0;
 }
 
@@ -96,12 +96,12 @@ html.sequence-mode .stats::after {
 .stats .givenUpText{
   opacity: 1;
   font-weight: 600;
-  font-size: 2.1rem;
+  font-size: 2rem;
   margin: 0;
   padding: 0;
   position: absolute;
   color: var(--muyMal);
-  transform: rotate(-3deg);
+  transform: rotate(-2deg);
   justify-self: center;
 }
 
