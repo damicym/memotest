@@ -12,7 +12,7 @@ const allIconsWNames = [...arrFa6Icons, /* ...arrCiIcons, */ ...arrGiIcons]
 
 export function enhanceName(name) {
   const maxNameWords = 2
-  const maxCharsPerWord = 10
+  const maxCharsPerWord = 9
   let enhanced = name
   enhanced = splitCamelCase(enhanced)
 
