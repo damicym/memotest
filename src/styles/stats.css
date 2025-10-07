@@ -8,7 +8,19 @@
   box-sizing: border-box;
 } */
 
-.stats{
+.hintBadge{
+  transition: border 0.3s;
+}
+
+.progressBarComponent, .control, .hintBadge, .loadingHint::after{
+  transition: background-color 0.3s;
+}
+
+.stats, .stats .givenUpText, .progressText, .control, .hintBadge{
+  transition: color 0.3s;
+}
+
+/* .stats{
   padding: 0 !important;
   min-height: 55px;
   height: 55px;
@@ -21,9 +33,13 @@
     conic-gradient(from 135deg, var(--accent) 90deg,#0000 0),
     conic-gradient(from 135deg at 50% 0, var(--accent) 90deg,#0000 0) var(--statsBgSecondary);
   background-size: 64px 32px;
+} */
+
+.stats *{
+  z-index: 1;
 }
 
-/* .stats {
+.stats {
   padding: 0 !important;
   min-height: 55px;
   height: 55px;
@@ -34,7 +50,7 @@
   position: relative;
   overflow: hidden;
   background: var(--statsBgSecondary);
-  z-index: 1;
+  z-index: 0;
 }
 
 .stats::before {
@@ -47,7 +63,7 @@
     conic-gradient(from 135deg at 50% 0, #344966 90deg, #0000 0) #374D6A;
   background-size: 64px 32px;
   opacity: 1;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.3s ease;
   z-index: 0;
 }
 
@@ -61,7 +77,7 @@
     conic-gradient(from 135deg at 50% 0, #2D6A5F 90deg, #0000 0) #306E63;
   background-size: 64px 32px;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.3s ease;
   z-index: 0;
 }
 
@@ -71,7 +87,7 @@ html.sequence-mode .stats::before {
 
 html.sequence-mode .stats::after {
   opacity: 1;
-} */
+}
 
 .stats p{
   margin: 0;
@@ -102,6 +118,30 @@ html.sequence-mode .stats::after {
 .statsInfo .customProgressBar{
   grid-column: 2;
 }
+
+.progressBarComponent{
+  width: 100%;
+  height: 26px;
+  border-radius: 13px;
+  background-color: var(--light);
+}
+
+.progressText{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-weight: 650;
+  font-size: 0.9rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .statsInfo .timer{
   grid-column: 1 !important;
   background: rgba(240, 244, 239, 0.2); /* var light en RGB */

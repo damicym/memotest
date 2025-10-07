@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { isPrimeOrBanned, getClosestNotPrimeOrBanned, getFancyModeName } from "../libs/myFunctions"
-import { GAME_RULES, GAME_MODES, GAME_MODES_DESCRIPTIONS } from "./Juego"
+import { GAME_RULES, GAME_MODES, GAME_MODES_DESCRIPTIONS, TIMINGS } from "./Juego"
 import { FaInfoCircle as InfoIcon } from "react-icons/fa";
 import { LiaExchangeAltSolid as ChangeModeIcon } from "react-icons/lia";
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -49,8 +49,8 @@ function Opciones({ totalGroups, setTotalGroups, prevValuePairs, gameMode, setGa
             setTimeout(() => {
                 setAnimationClass("")
                 setIsAnimating(false)
-            }, 600);
-        }, 600);
+            }, TIMINGS.GAME_MODE_CHANGE);
+        }, TIMINGS.GAME_MODE_CHANGE);
     }
 
     return (

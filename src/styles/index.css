@@ -15,19 +15,15 @@ html.sequence-mode{
   --dark: #0D211C;
   --light: #E8ECE9;
   --statsBgSecondary: #306E63;
-}
-
-.opciones, .stats {
-  /* transition: background-color 2s ease, color 2s ease, border-color 2s ease; */
+  --muyMal: #E0358F;
 }
 
 html{
-  transition: all 0.5s;
   --main: #B4CDED;
   --accent: #344966;
-  --statsBgSecondary: #374D6A;
   --dark: #0D1821;
   --light: #E9ECE8;
+  --statsBgSecondary: #374D6A;
 
   --lightBg: #F0F4EF;
   --gameBgSecondary: #E2E7E3;

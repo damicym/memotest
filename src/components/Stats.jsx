@@ -78,32 +78,13 @@ function Stats({ totalGroups, qGuessedPairs, reset, hint, giveUp, gameStatus, hi
                             striped={gameStatus === GAME_STATUS.GIVEN_UP}
                             animated={gameStatus !== GAME_STATUS.GIVEN_UP}
                             now={Math.max(4, progress)} 
+                            className='progressBarComponent'
                             style={{ 
                                 '--bs-progress-bar-bg': `hsl(${progress}, 55%, 55%)`,
                                 '--bs-progress-font-size': '0.8rem',
-                                width: "100%", 
-                                height: "26px",
-                                borderRadius: '13px',
-                                backgroundColor: 'var(--light)'
                             }}
                         />
-                        <div 
-                            style={{
-                                position: 'absolute',
-                                top: '0',
-                                left: '0',
-                                width: '100%',
-                                height: '100%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'var(--accent)',
-                                fontWeight: '650',
-                                fontSize: '0.9rem',
-                                pointerEvents: 'none',
-                                zIndex: 1
-                            }}
-                        >
+                        <div className='progressText'>
                             {`${Math.floor((qGuessedPairs / totalGroups) * 100)}%`}
                         </div>
                     </div>
