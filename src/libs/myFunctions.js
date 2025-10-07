@@ -23,7 +23,7 @@ export function deleteExtraWords(str, qWords, charsPerWord) {
         .filter(w => w.length <= charsPerWord)
         .slice(0, qWords)
     if(validWords.length) return validWords.join(" ")
-    else return words[0].slice(charsPerWord)
+    else return words[0]
 }
 
 export function separarNumerosYPalabras(texto) {
