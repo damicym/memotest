@@ -228,6 +228,12 @@ export function initializeOptions(gameMode){
 }
 
 export function getGroupsNFichasPerG(gameMode, sizeIndex){
+    if (
+      (gameMode === GAME_MODES.CLASSIC && sizeIndex >= GAME_RULES.CLASSIC_TABLERO_TYPES.length) ||
+      (gameMode === GAME_MODES.SEQUENCE && sizeIndex >= GAME_RULES.SEQUENCE_TABLERO_TYPES.length)
+    ) {
+      sizeIndex = GAME_RULES.DEFAULT_TABLERO_SIZE
+    }
     if(gameMode === GAME_MODES.CLASSIC) return { 
         groups: GAME_RULES.CLASSIC_TABLERO_TYPES[sizeIndex].groups, 
         fichasPerGroup: GAME_RULES.CLASSIC_TABLERO_TYPES[sizeIndex].fichasPerGroup

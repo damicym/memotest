@@ -31,6 +31,7 @@ export const TIMINGS = Object.freeze({
   BETWEEN_FICHA_SHINE: 0.8 * 1000,
   SHINE_CYCLE: 4.6 * 1000,  // suma de los 2 anteriores
   BETWEEN_WIN_CONFETTI: 0.5 * 1000,
+  GAME_MODE_CHANGE: 0.3 * 1000
 })
 
 export const GAME_MODES_DESCRIPTIONS = Object.freeze({
@@ -51,13 +52,11 @@ export const GAME_RULES = Object.freeze({
     { name: "Chico", groups: 6, fichasPerGroup: 2 }, 
     { name: "Mediano", groups: 12, fichasPerGroup: 2 }, 
     { name: "Grande", groups: 20, fichasPerGroup: 2 }, 
-    /* { name: "Enorme", groups: 35, fichasPerGroup: 2 } */
   ],
   SEQUENCE_TABLERO_TYPES: [ 
-    { name: "Chico", groups: 8, fichasPerGroup: 2 }, 
-    { name: "Mediano", groups: 12, fichasPerGroup: 2 }, 
+    { name: "Chico", groups: 6, fichasPerGroup: 2 }, 
+    { name: "Mediano", groups: 10, fichasPerGroup: 2 }, 
     { name: "Grande", groups: 16, fichasPerGroup: 2 }, 
-    /* { name: "Enorme", groups: 16, fichasPerGroup: 4 } */
   ]
 })
 
@@ -67,8 +66,15 @@ export const GAME_MODES = Object.freeze({
 })
 
 function Juego() {
-  const [gameMode, setGameMode] = useState(0)
-  const { groups: newGroups, fichasPerGroup: newFichasPerGroup } = getGroupsNFichasPerG(gameMode, GAME_RULES.DEFAULT_TABLERO_SIZE)
+  const [gameMode, setGameMode] = useState(() => {
+    const saved = localStorage.getItem('gameMode')
+    return saved !== null ? Number(saved) : GAME_MODES.CLASSIC
+  })
+  const [selectedSize, setSelectedSize] = useState(() => {
+    const saved = localStorage.getItem('selectedSize')
+    return saved !== null ? Number(saved) : GAME_RULES.DEFAULT_TABLERO_SIZE
+  })
+  const { groups: newGroups, fichasPerGroup: newFichasPerGroup } = getGroupsNFichasPerG(gameMode, selectedSize)
   const [totalGroups, setTotalGroups] = useState(() => newGroups)
   const prevValuePairs = useRef(newGroups)
   const [fichas, setFichas] = useState([])
@@ -86,7 +92,6 @@ function Juego() {
   const [usedHints, setUsedHints] = useState(0)
   const [isFirstRender, setIsFirstRender] = useState(true)
   const timeoutFlipAllFichas = useRef(null)
-  const [selectedSize, setSelectedSize] = useState(GAME_RULES.DEFAULT_TABLERO_SIZE)
   const [fichasPerGroup, setFichasPerGroup] = useState(newFichasPerGroup)
   const resetTriggeredByModeChange = useRef(false)
   const prevFichasPerGroup = useRef(newFichasPerGroup)
@@ -94,17 +99,24 @@ function Juego() {
 
   useEffect(() => {
     reset(false)
+    if (
+      (gameMode === GAME_MODES.CLASSIC && selectedSize >= GAME_RULES.CLASSIC_TABLERO_TYPES.length) ||
+      (gameMode === GAME_MODES.SEQUENCE && selectedSize >= GAME_RULES.SEQUENCE_TABLERO_TYPES.length)
+    ) {
+      localStorage.setItem('selectedSize', GAME_RULES.DEFAULT_TABLERO_SIZE)
+    } else localStorage.setItem('selectedSize', selectedSize)
   }, [selectedSize])
 
   useEffect(() => {
-    if (isFirstRender) {
-      setIsFirstRender(false)
-      return
-    }
+    localStorage.setItem('gameMode', gameMode)
     if(gameMode === GAME_MODES.SEQUENCE){
       document.documentElement.classList.add('sequence-mode')
     } else {
       document.documentElement.classList.remove('sequence-mode')
+    }
+    if (isFirstRender) {
+      setIsFirstRender(false)
+      return
     }
     let nextSize = selectedSize
     if (
