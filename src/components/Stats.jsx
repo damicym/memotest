@@ -89,7 +89,7 @@ function Stats({ totalGroups, qGuessedPairs, reset, hint, giveUp, gameStatus, hi
                         </div>
                     </div>
                     { gameStatus === GAME_STATUS.GIVEN_UP &&
-                        <p className='givenUpText' >¡Te rendiste!</p>
+                        <p className='givenUpText' >¡Juego terminado!</p>
                     }
                     <section className='controlsContainer'>
                     { gameStatus !== GAME_STATUS.STARTED || hintActive /* || usedHints >= GAME_RULES.MAX_HINTS */ ?

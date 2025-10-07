@@ -31,7 +31,7 @@ export const TIMINGS = Object.freeze({
   BETWEEN_FICHA_SHINE: 0.8 * 1000,
   SHINE_CYCLE: 4.6 * 1000,  // suma de los 2 anteriores
   BETWEEN_WIN_CONFETTI: 0.5 * 1000,
-  GAME_MODE_CHANGE: 0.3 * 1000
+  GAME_MODE_CHANGE: 0.2 * 1000
 })
 
 export const GAME_MODES_DESCRIPTIONS = Object.freeze({
