@@ -34,12 +34,24 @@ export const TIMINGS = Object.freeze({
   GAME_MODE_CHANGE: 0.2 * 1000
 })
 
-export const GAME_MODES_DESCRIPTIONS = Object.freeze({
-  ERROR: "Parece que se ha producido un error al determinar el modo de juego :(",
-  BETA: "Esto es una beta. Próximamente habrá nuevos modos, desafíos diarios y leaderbaord de jugadores",
-  CLASSIC: "Memotest sin nada nuevo: Encontrá los pares de fichas que coincidan en ícono y color. Podés usar pistas.",
-  SEQUENCE: "Encontrá secuencias de fichas: Ya no solo importa que coincidan, sino también el orden en el que las das vuelta. Podés usar pistas.",
+export const GAME_MODES = Object.freeze({
+  CLASSIC: 0,
+  ROGUE: 1,
+  SEQUENCE: 2,
 })
+
+export const GAME_MODES_DESCRIPTIONS = Object.freeze([
+  // classic
+  "Memotest sin nada nuevo: Encontrá los pares de fichas que coincidan en ícono y color. Podés usar pistas.",
+  // rogue
+  "El tiempo va en tu contra! Completá tantos tableros como puedas.\nCada vez será más difícil, así que aprobechá los beneficios que te ofrezca el tablero.",
+  // sequence
+  "Encontrá secuencias de fichas: Ya no solo importa que coincidan, sino también el orden en el que las das vuelta. Podés usar pistas.",
+  // extras | error
+  "Parece que se ha producido un error al determinar el modo de juego :(",
+  // extras | beta
+  "Esto es una beta. Próximamente habrá nuevos modos, desafíos diarios y leaderbaord de jugadores",
+])
 
 export const GAME_RULES = Object.freeze({
   DEFAULT_TABLERO_SIZE: 1,
@@ -48,22 +60,23 @@ export const GAME_RULES = Object.freeze({
   MAX_HINTS: 3,
   EXCLUDED_Q_PAIRS: [34, 38, 46],
   CLASSIC_GROUPS: 2,
-  CLASSIC_TABLERO_TYPES: [ 
-    { name: "Chico", groups: 6, fichasPerGroup: 2 }, 
-    { name: "Mediano", groups: 12, fichasPerGroup: 2 }, 
-    { name: "Grande", groups: 20, fichasPerGroup: 2 }, 
-  ],
-  SEQUENCE_TABLERO_TYPES: [ 
+})
+
+export const TABLERO_TYPES = Object.freeze([
+    [ // classic
+      { name: "Chico", groups: 6, fichasPerGroup: 2 }, 
+      { name: "Mediano", groups: 14, fichasPerGroup: 2 }, 
+      { name: "Grande", groups: 24, fichasPerGroup: 2 },
+    ],
+    [ // rogue
+
+    ],
+    [ // sequence
     { name: "Chico", groups: 6, fichasPerGroup: 2 }, 
     { name: "Mediano", groups: 10, fichasPerGroup: 2 }, 
     { name: "Grande", groups: 16, fichasPerGroup: 2 }, 
-  ]
-})
-
-export const GAME_MODES = Object.freeze({
-  CLASSIC: 0,
-  SEQUENCE: 1
-})
+    ]
+])
 
 function Juego() {
   const [gameMode, setGameMode] = useState(() => {
@@ -79,7 +92,7 @@ function Juego() {
   const prevValuePairs = useRef(newGroups)
   const [fichas, setFichas] = useState([])
   const [columns, setColumns] = useState(0)
-  const [isBoardLocked, setIsBoardLocked] = useState(false) // depsues de tocar una ficha incorrecta se lockea el juego por un tiempo
+  const [isBoardLocked, setIsBoardLocked] = useState(false)
   const [clicks, setClicks] = useState(0)
   const [errors, setErrors] = useState(0)
   const [gameStatus, setGameStatus] = useState(GAME_STATUS.NOT_STARTED)
@@ -99,30 +112,32 @@ function Juego() {
 
   useEffect(() => {
     reset(false)
-    if (
-      (gameMode === GAME_MODES.CLASSIC && selectedSize >= GAME_RULES.CLASSIC_TABLERO_TYPES.length) ||
-      (gameMode === GAME_MODES.SEQUENCE && selectedSize >= GAME_RULES.SEQUENCE_TABLERO_TYPES.length)
-    ) {
+    if(selectedSize >= TABLERO_TYPES[gameMode].length) {
       localStorage.setItem('selectedSize', GAME_RULES.DEFAULT_TABLERO_SIZE)
     } else localStorage.setItem('selectedSize', selectedSize)
   }, [selectedSize])
 
   useEffect(() => {
     localStorage.setItem('gameMode', gameMode)
-    if(gameMode === GAME_MODES.SEQUENCE){
+    if(gameMode === GAME_MODES.CLASSIC){
+      document.documentElement.classList.add('classic-mode')
+      document.documentElement.classList.remove('sequence-mode')
+      document.documentElement.classList.remove('rogue-mode')
+    } else if(gameMode === GAME_MODES.SEQUENCE){
       document.documentElement.classList.add('sequence-mode')
-    } else {
+      document.documentElement.classList.remove('classic-mode')
+      document.documentElement.classList.remove('rogue-mode')
+    } else if(gameMode === GAME_MODES.ROGUE){
+      document.documentElement.classList.add('rogue-mode')
+      document.documentElement.classList.remove('classic-mode')
       document.documentElement.classList.remove('sequence-mode')
     }
-    if (isFirstRender) {
+    if(isFirstRender) {
       setIsFirstRender(false)
       return
     }
     let nextSize = selectedSize
-    if (
-      (gameMode === GAME_MODES.CLASSIC && selectedSize >= GAME_RULES.CLASSIC_TABLERO_TYPES.length) ||
-      (gameMode === GAME_MODES.SEQUENCE && selectedSize >= GAME_RULES.SEQUENCE_TABLERO_TYPES.length)
-    ) {
+    if(selectedSize >= TABLERO_TYPES[gameMode].length) {
       nextSize = GAME_RULES.DEFAULT_TABLERO_SIZE
       setSelectedSize(GAME_RULES.DEFAULT_TABLERO_SIZE)
     }
@@ -133,14 +148,14 @@ function Juego() {
     setTotalGroups(newTotal)
     setFichasPerGroup(newFichasPerGroup)
 
-    if (newTotal * newFichasPerGroup === totalGroups * prevFichasPerGroup.current) reset()
-      else if (newTotal === totalGroups ) reset({ wAnimation: false })
+    if(newTotal * newFichasPerGroup === totalGroups * prevFichasPerGroup.current) reset()
+      else if(newTotal === totalGroups ) reset({ wAnimation: false })
 
     prevFichasPerGroup.current = newFichasPerGroup
   }, [gameMode])
 
   useEffect(() => {
-    if (resetTriggeredByModeChange.current) {
+    if(resetTriggeredByModeChange.current) {
       resetTriggeredByModeChange.current = false
       reset({ wAnimation: false })
       return
@@ -149,7 +164,7 @@ function Juego() {
   }, [totalGroups])
 
   useEffect(() => {
-    if (fichas.length > 0 && gameStatus !== GAME_STATUS.GIVEN_UP) {
+    if(fichas.length > 0 && gameStatus !== GAME_STATUS.GIVEN_UP) {
       const qGuessedPairs = fichas.filter(ficha => ficha.status === FICHA_STATUS.ADIVINADA).length / fichasPerGroup
       setQGuessedPairs(qGuessedPairs)
     }
@@ -181,8 +196,8 @@ function Juego() {
   }, [gameStatus])
 
   useEffect(() => {
-    if (clicks % fichasPerGroup !== 0) return
-    if (fichas.length === 0) return
+    if(clicks % fichasPerGroup !== 0) return
+    if(fichas.length === 0) return
     if(gameStatus === GAME_STATUS.GIVEN_UP) return
     const qGuessedPairs = fichas.filter(ficha => ficha.status === FICHA_STATUS.ADIVINADA).length / fichasPerGroup
     const attempts = clicks / fichasPerGroup
@@ -202,10 +217,7 @@ function Juego() {
     setIsBoardLocked(true)
     abiertasRef.current = []
     let nextFichasPerGroup
-    if (
-      (gameMode === GAME_MODES.CLASSIC && selectedSize >= GAME_RULES.CLASSIC_TABLERO_TYPES.length) ||
-      (gameMode === GAME_MODES.SEQUENCE && selectedSize >= GAME_RULES.SEQUENCE_TABLERO_TYPES.length)
-    ) {
+    if(selectedSize >= TABLERO_TYPES[gameMode].length) {
       nextFichasPerGroup = GAME_RULES.CLASSIC_GROUPS
     }
     else nextFichasPerGroup = getGroupsNFichasPerG(gameMode, selectedSize).fichasPerGroup
@@ -229,7 +241,7 @@ function Juego() {
       setIsBoardLocked(false)
     }
 
-    if (!wAnimation) {
+    if(!wAnimation) {
       setShouldFichasAnimate(false)
       fichasInit()
     } else {
@@ -243,10 +255,10 @@ function Juego() {
   // la primera vez que se toca, durante el juego, cuando se resetea desde el btn
 
   const hint = () => {
-    if (!fichas || fichas.length === 0) return
+    if(!fichas || fichas.length === 0) return
     const candidatas = fichas.filter(ficha => ficha.status !== FICHA_STATUS.ADIVINADA)
-    if (candidatas.length === 0) return
-    // if (usedHints >= GAME_RULES.MAX_HINTS) return
+    if(candidatas.length === 0) return
+    // if(usedHints >= GAME_RULES.MAX_HINTS) return
 
     setUsedHints(prev => prev + 1)
     setHintActive(true)
@@ -261,7 +273,7 @@ function Juego() {
   }
 
   useEffect(() => {
-    if (!hintActive) return
+    if(!hintActive) return
     wasHintActive.current = true
 
     const updateHintActiveTimer = setTimeout(() => { 

@@ -17,6 +17,14 @@ html.sequence-mode{
   --statsBgSecondary: #306E63;
   --muyMal: #E0358F;
 }
+html.rogue-mode{
+  --main: #DECDE5;
+  --accent: #5B3D66;
+  --dark: #1A0D18;
+  --light: #EEEBE9;
+  --statsBgSecondary: #5F416A;
+  --muyMal: #C2356B;
+}
 
 html{
   --main: #B4CDED;
@@ -24,26 +32,11 @@ html{
   --dark: #0D1821;
   --light: #E9ECE8;
   --statsBgSecondary: #374D6A;
+  --muyMal: #c23546;
 
   --lightBg: #F0F4EF;
   --gameBgSecondary: #E2E7E3;
-  --muyMal: #c23546;
   --muyBien: #3AB26F;
-  
-  /* --mal: #D97942; */
-  /* --regular: #E8B449; */
-  /* --bien: #8FC054; */
-  /* --progress-0:  #d64545; */
-  /* --progress-1:  #dc5a45; */
-  /* --progress-2:  #e16f45; */
-  /* --progress-3:  #e67e50; */
-  /* --progress-4:  #e6a54a; */
-  /* --progress-5:  #e6c04a; */
-  /* --progress-6:  #c8d94d; */
-  /* --progress-7:  #9acc4d; */
-  /* --progress-8:  #6fc95b; */
-  /* --progress-9:  #46c96c; */
-  /* --progress-10: #2fd97a; */
 }
 
 body {

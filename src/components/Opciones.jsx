@@ -16,14 +16,14 @@ function Opciones({ totalGroups, setTotalGroups, prevValuePairs, gameMode, setGa
         let expectedNumber = Number(newGroups)
         const direction = expectedNumber > prevValuePairs.current ? "up" : "down"
         if(!isPrimeOrBanned(expectedNumber, GAME_RULES.EXCLUDED_Q_PAIRS)) {
-            if (expectedNumber < GAME_RULES.MIN_TOTAL_PAIRS) expectedNumber = GAME_RULES.MIN_TOTAL_PAIRS
+            if(expectedNumber < GAME_RULES.MIN_TOTAL_PAIRS) expectedNumber = GAME_RULES.MIN_TOTAL_PAIRS
             setTotalGroups(expectedNumber)
             setFichasPerGroup(newFichasPerG)
             prevFichasPerGroup.current = newFichasPerG
         }
         else {
             expectedNumber = getClosestNotPrimeOrBanned(expectedNumber, direction, GAME_RULES.EXCLUDED_Q_PAIRS)
-            if (expectedNumber < GAME_RULES.MIN_TOTAL_PAIRS) expectedNumber = GAME_RULES.MIN_TOTAL_PAIRS
+            if(expectedNumber < GAME_RULES.MIN_TOTAL_PAIRS) expectedNumber = GAME_RULES.MIN_TOTAL_PAIRS
             setTotalGroups(expectedNumber)
             setFichasPerGroup(newFichasPerG)
             prevFichasPerGroup.current = newFichasPerG
@@ -32,12 +32,14 @@ function Opciones({ totalGroups, setTotalGroups, prevValuePairs, gameMode, setGa
     }
 
     const changeMode = () => {
-        if (isAnimating) return
+        if(isAnimating) return
         setIsAnimating(true)
         setAnimationClass("slide-exit")
         setGameMode(prev => {
             switch (prev){
-                case GAME_MODES.CLASSIC: return GAME_MODES.SEQUENCE
+                case GAME_MODES.CLASSIC: return GAME_MODES.ROGUE
+                break
+                case GAME_MODES.ROGUE: return GAME_MODES.SEQUENCE
                 break
                 case GAME_MODES.SEQUENCE: return GAME_MODES.CLASSIC
                 break
@@ -73,7 +75,7 @@ function Opciones({ totalGroups, setTotalGroups, prevValuePairs, gameMode, setGa
                                 key='infoTitleOverlay'
                                 placement='right'
                                 overlay={
-                                    <Tooltip className="customTooltip" id='tooltip-right'>{gameMode === GAME_MODES.CLASSIC ? GAME_MODES_DESCRIPTIONS.CLASSIC : gameMode === GAME_MODES.SEQUENCE ? GAME_MODES_DESCRIPTIONS.SEQUENCE : GAME_MODES_DESCRIPTIONS.ERROR }</Tooltip>
+                                    <Tooltip className="customTooltip" id='tooltip-right'>{ GAME_MODES_DESCRIPTIONS[gameMode] }</Tooltip>
                                 }
                             >
                                     <InfoIcon size={20}></InfoIcon>

@@ -9,7 +9,7 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine
     const alphaColor = color.replace('1)', '0.5)')
 
     useEffect(() => {
-        if (status === FICHA_STATUS.ESCONDIDA) {
+        if(status === FICHA_STATUS.ESCONDIDA) {
             setShowShadow(true)
         } else {
             setShowShadow(false)
@@ -17,7 +17,7 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine
     }, [status])
 
     const handleInnerTransitionStart = () => {
-        if (status === FICHA_STATUS.ESCONDIDA) {
+        if(status === FICHA_STATUS.ESCONDIDA) {
             setShowShadow(true)
         } else {
             setShowShadow(false)
@@ -25,9 +25,9 @@ function Ficha({ ficha, handleClick, lockState, shouldFichasAnimate, timeToShine
     }
 
     const getAnimationClass = () => {
-        if (beingHinted && (status === FICHA_STATUS.ERROR /* || status === FICHA_STATUS.ORDER_ERROR */)) return 'hinted-and-error'
-        if (beingHinted) return 'hinted'
-        if (status === FICHA_STATUS.ERROR /* || status === FICHA_STATUS.ORDER_ERROR */) return 'error'
+        if(beingHinted && (status === FICHA_STATUS.ERROR /* || status === FICHA_STATUS.ORDER_ERROR */)) return 'hinted-and-error'
+        if(beingHinted) return 'hinted'
+        if(status === FICHA_STATUS.ERROR /* || status === FICHA_STATUS.ORDER_ERROR */) return 'error'
         return ''
     }
 

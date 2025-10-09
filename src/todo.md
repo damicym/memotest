@@ -1,6 +1,9 @@
-# roughlike
-- empezar con subida de piso y fichas con poderes, después ver lo de roughlike
-- en tiempo determinado ver hasta q tablero llegas (se va agrandando cada vez q completas) (progressbar)
+# roguelike
+- subida de piso (se va agrandando cada vez q completas)
+  - cuando ganas, se hace un semi-reset
+  - 
+- teimpo en contra
+- progressbar, selectedSize
 - fichas con poderes (+tiempo, revelar una ficha, fichas trampa q escondan fichas) (tendrian q ser pares y quedarse disabled apenas se dan vuelta)  
 
 # ideas
@@ -33,5 +36,6 @@
   - certificado por
   - descargar  
 
+- info extra en algun lugar?
 - cambiar todos los pairs por groups dsps de terminar las funciones
 - cambiarle el nombre al repo ¿memodle? ¿memoughlike? (cambiar tmb el header del html)
