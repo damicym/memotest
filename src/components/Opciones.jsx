@@ -37,7 +37,7 @@ function Opciones({ totalGroups, setTotalGroups, prevValuePairs, gameMode, setGa
         setAnimationClass("slide-exit")
         setGameMode(prev => {
             switch (prev){
-                case GAME_MODES.CLASSIC: return GAME_MODES.ROGUE
+                case GAME_MODES.CLASSIC: return GAME_MODES.SEQUENCE
                 break
                 case GAME_MODES.ROGUE: return GAME_MODES.SEQUENCE
                 break
