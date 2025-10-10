@@ -1,5 +1,5 @@
 import { getRandomIcon } from "./icons"
-import { FICHA_STATUS, GAME_MODES, GAME_RULES } from "../components/Juego"
+import { FICHA_STATUS, GAME_MODES, GAME_RULES, TABLERO_TYPES } from "../components/Juego"
 import { TbCircleNumber1Filled as OneIcon, TbCircleNumber2Filled as TwoIcon, TbCircleNumber3Filled as ThreeIcon, TbCircleNumber4Filled as FourIcon, TbCircleNumber5Filled as FiveIcon, TbCircleNumber6Filled as SixIcon } from "react-icons/tb";
 export const numberIcons = [OneIcon, TwoIcon, ThreeIcon, FourIcon, FiveIcon, SixIcon]
 
@@ -10,7 +10,7 @@ export function splitCamelCase(str) {
 // export function deleteExtraWords(str, qWords, maxChars) {
 //     const words = str.split(" ")
 //     let auxStr = words.slice(0, qWords).join(" ")
-//     if (auxStr.length > maxChars) {
+//     if(auxStr.length > maxChars) {
 //         auxStr = words[0]
 //         auxStr = auxStr.slice(0, maxChars) + '\n' + auxStr.slice(maxChars)
 //     }
@@ -54,7 +54,7 @@ export function getRandomHSL(alpha = 1){
 export function hslaStringToRgba(hslaStr) {
   // Extraer números con regex
   const match = hslaStr.match(/hsla?\(\s*([\d.]+),\s*([\d.]+)%?,\s*([\d.]+)%?,?\s*([\d.]*)\s*\)/i)
-  if (!match) {
+  if(!match) {
     throw new Error("Formato HSLA inválido: " + hslaStr)
   }
 
@@ -73,12 +73,12 @@ export function hslaStringToRgba(hslaStr) {
 
   let r = 0, g = 0, b = 0
 
-  if (0 <= hp && hp < 1) [r, g, b] = [c, x, 0]
-  else if (1 <= hp && hp < 2) [r, g, b] = [x, c, 0]
-  else if (2 <= hp && hp < 3) [r, g, b] = [0, c, x]
-  else if (3 <= hp && hp < 4) [r, g, b] = [0, x, c]
-  else if (4 <= hp && hp < 5) [r, g, b] = [x, 0, c]
-  else if (5 <= hp && hp < 6) [r, g, b] = [c, 0, x]
+  if(0 <= hp && hp < 1) [r, g, b] = [c, x, 0]
+  else if(1 <= hp && hp < 2) [r, g, b] = [x, c, 0]
+  else if(2 <= hp && hp < 3) [r, g, b] = [0, c, x]
+  else if(3 <= hp && hp < 4) [r, g, b] = [0, x, c]
+  else if(4 <= hp && hp < 5) [r, g, b] = [x, 0, c]
+  else if(5 <= hp && hp < 6) [r, g, b] = [c, 0, x]
 
   const m = l - c / 2
   r = Math.round((r + m) * 255)
@@ -91,7 +91,7 @@ export function hslaStringToRgba(hslaStr) {
 export function hslaToHex(hslaStr) {
   // Regex para capturar valores de h, s, l, a
   const match = hslaStr.match(/hsla?\(\s*([\d.]+),\s*([\d.]+)%?,\s*([\d.]+)%?(?:,\s*([\d.]+))?\s*\)/i)
-  if (!match) {
+  if(!match) {
     throw new Error("Formato HSLA inválido: " + hslaStr)
   }
 
@@ -106,12 +106,12 @@ export function hslaToHex(hslaStr) {
 
   let r = 0, g = 0, b = 0
 
-  if (0 <= hp && hp < 1) [r, g, b] = [c, x, 0]
-  else if (1 <= hp && hp < 2) [r, g, b] = [x, c, 0]
-  else if (2 <= hp && hp < 3) [r, g, b] = [0, c, x]
-  else if (3 <= hp && hp < 4) [r, g, b] = [0, x, c]
-  else if (4 <= hp && hp < 5) [r, g, b] = [x, 0, c]
-  else if (5 <= hp && hp < 6) [r, g, b] = [c, 0, x]
+  if(0 <= hp && hp < 1) [r, g, b] = [c, x, 0]
+  else if(1 <= hp && hp < 2) [r, g, b] = [x, c, 0]
+  else if(2 <= hp && hp < 3) [r, g, b] = [0, c, x]
+  else if(3 <= hp && hp < 4) [r, g, b] = [0, x, c]
+  else if(4 <= hp && hp < 5) [r, g, b] = [x, 0, c]
+  else if(5 <= hp && hp < 6) [r, g, b] = [c, 0, x]
 
   const m = l - c / 2
   r = Math.round((r + m) * 255)
@@ -121,7 +121,7 @@ export function hslaToHex(hslaStr) {
   // Convertir a hex con padding
   const toHex = (val) => val.toString(16).padStart(2, "0").toUpperCase()
   let color = `#${toHex(r)}${toHex(g)}${toHex(b)}`
-  if (color?.length!=7) {
+  if(color?.length!=7) {
     console.log("Revisar color:" + color)
   }
   return color
@@ -138,26 +138,26 @@ export function shuffle(array) {
 
 export function defineColumns(groups, fichasPerGroup) {
     const totales = groups * fichasPerGroup
-    if (Math.sqrt(totales) === Math.ceil(Math.sqrt(totales))) return Math.sqrt(totales)
+    if(Math.sqrt(totales) === Math.ceil(Math.sqrt(totales))) return Math.sqrt(totales)
     else {
         for (let i = 0; i < totales; i++) {
-            if (totales % i === 0 && totales / i < i) return i
+            if(totales % i === 0 && totales / i < i) return i
         }
     }
 }
 
 export function isPrimeOrBanned(n, banned = []) {
-    if (n < 2) return false
-    if (banned.includes(n)) return true
+    if(n < 2) return false
+    if(banned.includes(n)) return true
     for (let i = 2; i <= Math.sqrt(n); i++) {
-        if (n % i === 0) return false
+        if(n % i === 0) return false
     }
     return true;
 }
 
 export function getClosestNotPrimeOrBanned(n, direction = 'up', banned = []) {
     do {
-        if (direction === 'up') n++
+        if(direction === 'up') n++
         else n--;
     } while (isPrimeOrBanned(n, banned))
     return n;
@@ -188,7 +188,7 @@ function getHslaWError(colorOffset, totalSections, currentSection){
 }
 
 export function getFancyModeName(modeName){
-    return modeName === GAME_MODES.CLASSIC ? 'Clásico' : modeName === GAME_MODES.SEQUENCE ? 'Secuencia' : 'Modo no seleccionado'
+    return modeName === GAME_MODES.CLASSIC ? 'Clásico' : modeName === GAME_MODES.SEQUENCE ? 'Secuencia' : modeName === GAME_MODES.ROGUE ? 'Roguelike' : 'Modo no seleccionado'
 }
 
 export function inicializarFichas(totalGroups, fichasPerGroup, gameMode, suffle = true) {
@@ -219,27 +219,19 @@ export function inicializarFichas(totalGroups, fichasPerGroup, gameMode, suffle 
     return auxFichas
 }
 
-export function initializeOptions(gameMode){
-    return gameMode === GAME_MODES.CLASSIC 
-        ? GAME_RULES.CLASSIC_TABLERO_TYPES
-        : gameMode === GAME_MODES.SEQUENCE
-            ? GAME_RULES.SEQUENCE_TABLERO_TYPES
-            : []
-}
-
 export function getGroupsNFichasPerG(gameMode, sizeIndex){
-    if (
-      (gameMode === GAME_MODES.CLASSIC && sizeIndex >= GAME_RULES.CLASSIC_TABLERO_TYPES.length) ||
-      (gameMode === GAME_MODES.SEQUENCE && sizeIndex >= GAME_RULES.SEQUENCE_TABLERO_TYPES.length)
-    ) {
-      sizeIndex = GAME_RULES.DEFAULT_TABLERO_SIZE
-    }
-    if(gameMode === GAME_MODES.CLASSIC) return { 
-        groups: GAME_RULES.CLASSIC_TABLERO_TYPES[sizeIndex].groups, 
-        fichasPerGroup: GAME_RULES.CLASSIC_TABLERO_TYPES[sizeIndex].fichasPerGroup
-    }
-    else if(gameMode === GAME_MODES.SEQUENCE) return { 
-        groups: GAME_RULES.SEQUENCE_TABLERO_TYPES[sizeIndex].groups, 
-        fichasPerGroup: GAME_RULES.SEQUENCE_TABLERO_TYPES[sizeIndex].fichasPerGroup 
+    if(gameMode === GAME_MODES.ROGUE) {
+        return {
+        groups: 10,
+        fichasPerGroup: GAME_RULES.CLASSIC_GROUPS
+        }
+    } else {
+        if(sizeIndex >= TABLERO_TYPES[gameMode].length) {
+          sizeIndex = GAME_RULES.DEFAULT_TABLERO_SIZE
+        }
+        return {
+            groups: TABLERO_TYPES[gameMode][sizeIndex].groups, 
+            fichasPerGroup: TABLERO_TYPES[gameMode][sizeIndex].fichasPerGroup
+        }
     }
 }

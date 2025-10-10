@@ -32,9 +32,9 @@ function Stats({ totalGroups, qGuessedPairs, reset, hint, giveUp, gameStatus, hi
                 return
             }
             setPuntos(prev => {
-            if (prev === "...") return "."
-            else if (prev === ".") return ".."
-            else if (prev === "..") return "..."
+            if(prev === "...") return "."
+            else if(prev === ".") return ".."
+            else if(prev === "..") return "..."
             return "..."
             })
         }, TIMINGS.BETWEEN_ANIMATED_DOTS)

@@ -65,7 +65,7 @@ export async function toShapesNColors(fichas, callback){
     })
     return { shape: shapeFromIcon, color: ficha.color }
   })
-  if (typeof callback === 'function') {
+  if(typeof callback === 'function') {
     callback(shapesNColors) //setShapesNColors(shapesNColors)
   }
 }
@@ -87,7 +87,7 @@ export async function toOneShapeNColor(ficha, prevShapesNColors, callback){
     path: getPathFromIcon(ficha.Icon),
   })
   let shapeNColor = { groupId: ficha.groupId, shape: shapeFromIcon, color: hslaToHex(ficha.color) }
-  if (typeof callback === 'function') {
+  if(typeof callback === 'function') {
     callback(prev => [...prev, shapeNColor])
   }
 }

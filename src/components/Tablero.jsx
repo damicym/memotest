@@ -64,10 +64,10 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
     // si tocas una en el orden incorrecto, esconderDsps()
     // si no, no, hasta que llegues a fichasPerGroup
     const handleClickFicha = (e, key) => {
-        if (isBoardLocked) return
+        if(isBoardLocked) return
         const fichaActual = fichas.find(f => f.id === key)
-        if (!fichaActual) return
-        if (fichaActual.status !== FICHA_STATUS.ESCONDIDA) return
+        if(!fichaActual) return
+        if(fichaActual.status !== FICHA_STATUS.ESCONDIDA) return
         let errType = ERROR_TYPES.NONE
         sumarClick()
         let next = [...fichas]
@@ -75,12 +75,12 @@ function Tablero({ fichas, setFichas, columns, isBoardLocked, setIsBoardLocked, 
         abiertasRef.current.push(fichaActual)
         
         // ver si está en el orden correcto
-        if (gameMode === GAME_MODES.SEQUENCE) {
+        if(gameMode === GAME_MODES.SEQUENCE) {
             const estaEnOrden = abiertasRef.current.every((f, i) => f.order === i + 1)
             if(!estaEnOrden) errType = ERROR_TYPES.ORDER
         }
         // decidir si puso las todas bien
-        if (abiertasRef.current.length === fichasPerGroup) {
+        if(abiertasRef.current.length === fichasPerGroup) {
             const allSameGroup = abiertasRef.current.every(f => f.groupId === abiertasRef.current[0].groupId)
 
             if(allSameGroup) {

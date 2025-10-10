@@ -49,43 +49,56 @@
   align-items: center;
   position: relative;
   overflow: hidden;
-  background: var(--statsBgSecondary);
   z-index: 0;
-}
-
-.stats::before {
-  content: '';
-  position: absolute;
-  inset: 0;
+  
   background:
     conic-gradient(from 135deg, #344966 90deg, #0000 0) 32px calc(32px/2),
     conic-gradient(from 135deg, #344966 90deg, #0000 0),
     conic-gradient(from 135deg at 50% 0, #344966 90deg, #0000 0) #374D6A;
   background-size: 64px 32px;
-  opacity: 1;
+}
+
+.stats::before, .stats::after{
+  content: '';
+  position: absolute;
+  inset: 0;
   transition: opacity 0.5s ease;
   z-index: 0;
 }
 
-.stats::after {
-  content: '';
-  position: absolute;
-  inset: 0;
+html.classic-mode .stats::before, html.sequence-mode .stats::before {
+  background:
+    conic-gradient(from 135deg, #5B3D7A 90deg, #0000 0) 32px calc(32px/2),
+    conic-gradient(from 135deg, #5B3D7A 90deg, #0000 0),
+    conic-gradient(from 135deg at 50% 0, #5B3D7A 90deg, #0000 0) #5E417E;
+  background-size: 64px 32px;
+  opacity: 0;
+}
+
+html.rogue-mode .stats::before {
+  background:
+    conic-gradient(from 135deg, #5B3D7A 90deg, #0000 0) 32px calc(32px/2),
+    conic-gradient(from 135deg, #5B3D7A 90deg, #0000 0),
+    conic-gradient(from 135deg at 50% 0, #5B3D7A 90deg, #0000 0) #5E417E;
+  background-size: 64px 32px;
+  opacity: 1;
+}
+
+html.classic-mode .stats::after, html.rogue-mode .stats::after {
   background:
     conic-gradient(from 135deg, #2D6A5F 90deg, #0000 0) 32px calc(32px/2),
     conic-gradient(from 135deg, #2D6A5F 90deg, #0000 0),
     conic-gradient(from 135deg at 50% 0, #2D6A5F 90deg, #0000 0) #306E63;
   background-size: 64px 32px;
   opacity: 0;
-  transition: opacity 0.5s ease;
-  z-index: 0;
-}
-
-html.sequence-mode .stats::before {
-  opacity: 0;
 }
 
 html.sequence-mode .stats::after {
+  background:
+    conic-gradient(from 135deg, #2D6A5F 90deg, #0000 0) 32px calc(32px/2),
+    conic-gradient(from 135deg, #2D6A5F 90deg, #0000 0),
+    conic-gradient(from 135deg at 50% 0, #2D6A5F 90deg, #0000 0) #306E63;
+  background-size: 64px 32px;
   opacity: 1;
 }
 

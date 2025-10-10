@@ -16,10 +16,10 @@ export function enhanceName(name) {
   let enhanced = name
   enhanced = splitCamelCase(enhanced)
 
-  if (enhanced.startsWith("Fa ") || enhanced.startsWith("Ci ") || enhanced.startsWith("Gi ")) enhanced = enhanced.slice(3)
-  if (enhanced.startsWith("Reg ")) enhanced = enhanced.slice(4)
-  else if (enhanced.startsWith("Solid ")) enhanced = enhanced.slice(6)
-  else if (enhanced.startsWith("Light ")) enhanced = enhanced.slice(6)
+  if(enhanced.startsWith("Fa ") || enhanced.startsWith("Ci ") || enhanced.startsWith("Gi ")) enhanced = enhanced.slice(3)
+  if(enhanced.startsWith("Reg ")) enhanced = enhanced.slice(4)
+  else if(enhanced.startsWith("Solid ")) enhanced = enhanced.slice(6)
+  else if(enhanced.startsWith("Light ")) enhanced = enhanced.slice(6)
 
   enhanced = deleteExtraWords(enhanced, maxNameWords, maxCharsPerWord)
   enhanced = separarNumerosYPalabras(enhanced)
